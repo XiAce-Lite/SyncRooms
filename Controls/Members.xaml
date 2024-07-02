@@ -13,7 +13,7 @@
     mc:Ignorable="d">
 
     <Grid>
-        <materialDesign:Card Width="286" Margin="1,1,0,1">
+        <materialDesign:Card Width="286" Margin="6,2,0,2">
             <VirtualizingStackPanel
                 x:Name="MemberArea"
                 Background="AliceBlue"

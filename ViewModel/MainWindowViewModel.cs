@@ -179,8 +179,22 @@ namespace SyncRooms.ViewModel
             [JsonPropertyName("userId")]
             public string UserId { get; set; } = string.Empty;
 
+            private string _nickname = "";
             [JsonPropertyName("nickname")]
-            public string Nickname { get; set; } = string.Empty;
+            public string Nickname {
+                get
+                {
+                    if (string.IsNullOrEmpty(_nickname))
+                    {
+                        return "仮入室";
+                    }
+                    return _nickname;
+                }
+                set
+                {
+                    _nickname = value; 
+                }
+            }
 
             [JsonPropertyName("idProvider")]
             public string IdProvider { get; set; } = string.Empty;
