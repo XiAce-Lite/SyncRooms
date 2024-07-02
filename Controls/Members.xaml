@@ -13,18 +13,17 @@
     mc:Ignorable="d">
 
     <Grid>
-        <materialDesign:Card Width="287" Margin="1,0,0,0">
+        <materialDesign:Card Width="286" Margin="1,1,0,1">
             <VirtualizingStackPanel
                 x:Name="MemberArea"
-                Width="287"
                 Background="AliceBlue"
                 Orientation="Horizontal"
                 VirtualizingPanel.IsVirtualizing="True"
                 VirtualizingPanel.ScrollUnit="Pixel"
                 VirtualizingPanel.VirtualizationMode="Recycling">
                 <Image
-                    Width="24"
-                    Height="24"
+                    Width="22"
+                    Height="22"
                     Margin="9,3,3,3"
                     Source="{Binding Avatar.Url}" />
 
@@ -46,7 +45,7 @@
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Center"
                             d:Text="Member Name"
-                            FontSize="14"
+                            FontSize="12"
                             FontWeight="Bold"
                             Text="{Binding Nickname}"
                             TextWrapping="NoWrap"
@@ -85,7 +84,7 @@
                         VerticalAlignment="Center"
                         d:Text="Room Owner's Part"
                         FlowDirection="RightToLeft"
-                        FontSize="10"
+                        FontSize="9"
                         Text="{Binding LastPlayedPart.Part}" />
 
                 </VirtualizingStackPanel>
