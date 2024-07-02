@@ -1,0 +1,181 @@
+﻿<Window
+    x:Class="SyncRooms.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:SyncRooms"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prop="clr-namespace:SyncRooms.Properties"
+    xmlns:controls="clr-namespace:SyncRooms.Controls"
+    xmlns:vm="clr-namespace:SyncRooms.ViewModel"
+    xmlns:vwp="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
+    Title="SyncRooms:Rooms List"
+    Width="1200"
+    Height="720"
+    d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
+    Style="{StaticResource MaterialDesignWindow}"
+    Topmost="{Binding WindowTopMost, Source={x:Static prop:Settings.Default}}"
+    mc:Ignorable="d">
+
+    <Window.DataContext>
+        <vm:MainWindowViewModel />
+    </Window.DataContext>
+
+    <Window.Background>
+        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlColorKey}}" />
+    </Window.Background>
+
+    <Grid>
+        <ListView
+            Margin="40,41,0,0"
+            ItemsSource="{Binding Rooms, UpdateSourceTrigger=PropertyChanged}"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+            ScrollViewer.IsDeferredScrollingEnabled="True"
+            SelectionMode="Extended"
+            VirtualizingPanel.IsVirtualizing="True"
+            VirtualizingPanel.VirtualizationMode="Recycling">
+
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <vwp:VirtualizingWrapPanel
+                        Orientation="Horizontal"
+                        SpacingMode="None"
+                        StretchItems="True"
+                        VirtualizingPanel.IsVirtualizing="True"
+                        VirtualizingPanel.VirtualizationMode="Recycling" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <!--  内容更新時のバインドエラー回避のおまじない。  -->
+                    <Setter Property="HorizontalAlignment" Value="Left" />
+                    <Setter Property="HorizontalContentAlignment" Value="Left" />
+                    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListView.ItemContainerStyle>
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <VirtualizingStackPanel
+                        Orientation="Horizontal"
+                        ScrollViewer.IsDeferredScrollingEnabled="true"
+                        VirtualizingPanel.IsVirtualizing="True"
+                        VirtualizingPanel.VirtualizationMode="Recycling">
+
+                        <controls:RoomCard />
+
+                    </VirtualizingStackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+        </ListView>
+
+        <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding IsChecked, ElementName=MenuToggleButton}">
+            <materialDesign:DrawerHost.LeftDrawerContent>
+                <DockPanel MinWidth="220">
+                    <ToggleButton
+                        Margin="16"
+                        HorizontalAlignment="Right"
+                        DockPanel.Dock="Top"
+                        IsChecked="{Binding IsChecked, ElementName=MenuToggleButton, Mode=TwoWay}"
+                        Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
+
+                    <VirtualizingStackPanel
+                        Margin="16,4"
+                        Cursor=""
+                        VirtualizingPanel.IsVirtualizing="true"
+                        VirtualizingPanel.VirtualizationMode="Recycling">
+
+                        <StackPanel
+                            Margin="15,0,0,0"
+                            Cursor=""
+                            Orientation="Horizontal">
+                            <CheckBox
+                                Padding="9"
+                                Content="最前面固定"
+                                FontWeight="DemiBold"
+                                Foreground="#FF3F51B5"
+                                IsChecked="{Binding WindowTopMost, Mode=TwoWay, Source={x:Static prop:Settings.Default}, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+
+                        <!--
+                        <Button
+                            x:Name="BtnSettings"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Left"
+                            Style="{StaticResource MaterialDesignFlatButton}">
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="Toolbox" />
+                                <TextBlock
+                                    Margin="10,0"
+                                    Cursor=""
+                                    Text="設定" />
+                            </DockPanel>
+                        </Button>
+                        -->
+
+                        <Button
+                            x:Name="BtnExit"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Left"
+                            Click="BtnExit_Click"
+                            Style="{StaticResource MaterialDesignFlatButton}">
+                            <DockPanel>
+                                <materialDesign:PackIcon VerticalAlignment="Center" Kind="ExitToApp" />
+                                <TextBlock
+                                    Margin="10,0"
+                                    VerticalAlignment="Center"
+                                    Text="終了" />
+                            </DockPanel>
+                        </Button>
+
+                    </VirtualizingStackPanel>
+                </DockPanel>
+            </materialDesign:DrawerHost.LeftDrawerContent>
+
+            <materialDesign:ColorZone
+                Padding="10,4,10,4"
+                VerticalAlignment="Top"
+                Mode="PrimaryDark">
+                <DockPanel>
+                    <VirtualizingStackPanel
+                        Orientation="Horizontal"
+                        VirtualizingPanel.IsVirtualizing="true"
+                        VirtualizingPanel.VirtualizationMode="Recycling">
+                        <ToggleButton
+                            x:Name="MenuToggleButton"
+                            Width="22"
+                            Height="22"
+                            AutomationProperties.Name="HamburgerToggleButton"
+                            Style="{DynamicResource MaterialDesignHamburgerToggleButton}" />
+
+                        <Button
+                            x:Name="GetHTML"
+                            Margin="10,0,0,0"
+                            Click="GetHTML_Click"
+                            Content="Reload"
+                            DockPanel.Dock="Top" />
+
+                        <Label
+                            VerticalAlignment="Center"
+                            Content="Room Counts: "
+                            DockPanel.Dock="Top"
+                            FontSize="10"
+                            Foreground="White" />
+
+                        <Label
+                            VerticalAlignment="Center"
+                            Content="{Binding Rooms.Count, FallbackValue='can not get data.'}"
+                            DockPanel.Dock="Top"
+                            FontSize="10"
+                            Foreground="White" />
+
+
+                    </VirtualizingStackPanel>
+                </DockPanel>
+            </materialDesign:ColorZone>
+        </materialDesign:DrawerHost>
+    </Grid>
+</Window>
