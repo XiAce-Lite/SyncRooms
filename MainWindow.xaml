@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:SyncRooms.Controls"
+    xmlns:conv="clr-namespace:SyncRooms.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:SyncRooms"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -15,7 +16,7 @@
     Height="720"
     d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
     Style="{StaticResource MaterialDesignWindow}"
-    Topmost="{Binding WindowTopMost, Source={x:Static prop:Settings.Default}}"
+    Topmost="{Binding WindowTopMost, Source={x:Static prop:Settings.Default}, UpdateSourceTrigger=PropertyChanged}"
     mc:Ignorable="d">
 
     <Window.DataContext>
@@ -27,7 +28,7 @@
     </Window.Background>
 
     <Grid>
-        <Grid Margin="40,41,0,0">
+        <Grid Margin="10,37,0,0">
             <ListView
                 ItemsSource="{Binding Rooms, UpdateSourceTrigger=PropertyChanged}"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -40,7 +41,7 @@
                     <ItemsPanelTemplate>
                         <vwp:VirtualizingWrapPanel
                             Orientation="Horizontal"
-                            SpacingMode="None"
+                            SpacingMode="StartAndEndOnly"
                             StretchItems="False"
                             VirtualizingPanel.IsVirtualizing="True"
                             VirtualizingPanel.VirtualizationMode="Recycling" />
@@ -163,12 +164,16 @@
 
                         <Button
                             x:Name="GetHTML"
+                            Height="20"
                             Margin="10,0,0,0"
                             Click="GetHTML_Click"
                             Content="Reload"
-                            DockPanel.Dock="Top" />
+                            DockPanel.Dock="Top"
+                            FontSize="10"
+                            IsEnabled="{Binding ElementName=UseAutoReload, Path=IsChecked, Converter={StaticResource InvertBooleanConverter}}" />
 
                         <Label
+                            Margin="16,0,0,0"
                             VerticalAlignment="Center"
                             Content="Room Counts: "
                             DockPanel.Dock="Top"
@@ -177,11 +182,52 @@
 
                         <Label
                             VerticalAlignment="Center"
-                            Content="{Binding Rooms.Count, FallbackValue='can not get data.'}"
+                            Content="{Binding Rooms.Count, FallbackValue='0'}"
                             DockPanel.Dock="Top"
                             FontSize="10"
                             Foreground="White" />
 
+                        <Label
+                            Margin="16,0,0,0"
+                            VerticalAlignment="Center"
+                            Content="Auto Reload"
+                            DockPanel.Dock="Top"
+                            FontSize="10"
+                            Foreground="White" />
+
+                        <CheckBox
+                            x:Name="UseAutoReload"
+                            Width="22"
+                            Height="22"
+                            Margin="4,0,0,0"
+                            Click="UseAutoReload_Click"
+                            IsChecked="{Binding UseAutoReload, Mode=TwoWay, Source={x:Static prop:Settings.Default}, UpdateSourceTrigger=PropertyChanged}"
+                            Style="{DynamicResource MaterialDesignUserForegroundCheckBox}">
+                            <CheckBox.BorderBrush>
+                                <SolidColorBrush Opacity="1" Color="#FF3F51B5" />
+                            </CheckBox.BorderBrush>
+                        </CheckBox>
+
+                        <Label
+                            Margin="16,0,0,0"
+                            VerticalAlignment="Center"
+                            Content="Reload Sec: "
+                            DockPanel.Dock="Top"
+                            FontSize="10"
+                            Foreground="White" />
+
+                        <Slider
+                            x:Name="ReloadTiming"
+                            Width="110"
+                            Margin="5,1,0,0"
+                            AutoToolTipPlacement="TopLeft"
+                            Foreground="AliceBlue"
+                            ValueChanged="ReloadTiming_ValueChanged"
+                            IsEnabled="{Binding ElementName=UseAutoReload, Path=IsChecked}"
+                            Maximum="60"
+                            Minimum="5"
+                            SmallChange="1"
+                            Value="{Binding ReloadTiming, Mode=TwoWay, Source={x:Static prop:Settings.Default}, UpdateSourceTrigger=PropertyChanged}" />
 
                     </VirtualizingStackPanel>
                 </DockPanel>

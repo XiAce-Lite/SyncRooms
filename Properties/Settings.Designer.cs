@@ -58,5 +58,29 @@ namespace SyncRooms.Properties {
                 this["WindowTopMost"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ReloadTiming {
+            get {
+                return ((int)(this["ReloadTiming"]));
+            }
+            set {
+                this["ReloadTiming"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseAutoReload {
+            get {
+                return ((bool)(this["UseAutoReload"]));
+            }
+            set {
+                this["UseAutoReload"] = value;
+            }
+        }
     }
 }

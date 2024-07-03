@@ -8,12 +8,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:SyncRooms.ViewModel"
     d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
-    d:DesignHeight="480"
+    d:DesignHeight="280"
     d:DesignWidth="300"
     mc:Ignorable="d">
 
     <Grid>
-        <materialDesign:Card Width="286" Margin="6,2,0,2">
+        <materialDesign:Card Width="280" Margin="6,2,0,0">
             <VirtualizingStackPanel
                 x:Name="MemberArea"
                 Background="AliceBlue"
@@ -39,7 +39,7 @@
                         VirtualizingPanel.VirtualizationMode="Recycling">
                         <TextBlock
                             Width="200"
-                            Height="Auto"
+                            Height="22"
                             Margin="8,0,0,0"
                             Padding="3"
                             HorizontalAlignment="Stretch"
@@ -53,21 +53,21 @@
 
                         <Button
                             x:Name="AddFav"
+                            Height="22"
                             Padding="0,0,0,0"
-                            Style="{StaticResource MaterialDesignFlatButton}"
-                            Visibility="Collapsed">
+                            Style="{StaticResource MaterialDesignFlatButton}">
                             <DockPanel>
-                                <materialDesign:PackIcon Kind="AddAlertOutline" />
+                                <materialDesign:PackIcon Kind="AddAlertOutline" Visibility="Collapsed" />
                             </DockPanel>
                         </Button>
 
                         <Button
                             x:Name="RemoveFav"
+                            Height="22"
                             Padding="0,0,0,0"
-                            Style="{StaticResource MaterialDesignFlatButton}"
-                            Visibility="Collapsed">
+                            Style="{StaticResource MaterialDesignFlatButton}">
                             <DockPanel>
-                                <materialDesign:PackIcon Kind="AddAlert" />
+                                <materialDesign:PackIcon Kind="AddAlert" Visibility="Collapsed" />
                             </DockPanel>
                         </Button>
                         <!--

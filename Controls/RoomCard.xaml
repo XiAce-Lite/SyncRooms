@@ -13,10 +13,10 @@
     mc:Ignorable="d">
 
     <Grid
-        Width="300"
-        Height="405"
-        Margin="2,0,2,0">
-        <materialDesign:Card Margin="0,4,0,4" UniformCornerRadius="10">
+        Width="293"
+        Height="370"
+        Margin="3,0,2,0">
+        <materialDesign:Card Margin="0,0,0,4" UniformCornerRadius="10">
             <VirtualizingStackPanel
                 Background="#d9e2fe"
                 Orientation="Vertical"
@@ -31,7 +31,7 @@
                     VirtualizingPanel.VirtualizationMode="Recycling">
                     <materialDesign:PackIcon
                         x:Name="IsLocked"
-                        Margin="4,8,0,0"
+                        Margin="5,7,0,0"
                         Background="White"
                         Kind="LockOutline"
                         Visibility="{Binding NeedPasswd, Converter={StaticResource BooleanToVisibilityConverter}}" />
@@ -116,13 +116,13 @@
                 -->
 
                 <materialDesign:Card
-                    Width="286"
-                    Margin="6,6,6,6"
+                    Width="280"
+                    Margin="6,0,6,6"
                     HorizontalAlignment="Left"
                     Background="#f9fcff">
                     <TextBox
                         x:Name="RoomDescription"
-                        Height="90"
+                        Height="70"
                         Padding="10,10,10,10"
                         VerticalContentAlignment="Top"
                         d:Text="Room Description"
