@@ -8,14 +8,17 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:SyncRooms.ViewModel"
     d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
-    d:DesignHeight="280"
     d:DesignWidth="300"
     mc:Ignorable="d">
 
     <Grid>
-        <materialDesign:Card Width="280" Margin="6,2,0,0">
+        <materialDesign:Card
+            Width="280"
+            Height="Auto"
+            Margin="6,2,0,0">
             <VirtualizingStackPanel
                 x:Name="MemberArea"
+                Width="280"
                 Background="AliceBlue"
                 Orientation="Horizontal"
                 VirtualizingPanel.IsVirtualizing="True"
@@ -38,9 +41,10 @@
                         VirtualizingPanel.ScrollUnit="Pixel"
                         VirtualizingPanel.VirtualizationMode="Recycling">
                         <TextBlock
-                            Width="200"
+                            x:Name="NickName"
+                            Width="190"
                             Height="22"
-                            Margin="8,0,0,0"
+                            Margin="8,0,6,0"
                             Padding="3"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Center"
@@ -50,39 +54,83 @@
                             Text="{Binding Nickname}"
                             TextWrapping="NoWrap"
                             ToolTip="{Binding Nickname}" />
+                        <Button
+                            x:Name="RemoveFav"
+                            Height="16"
+                            Padding="0,0,0,0"
+                            Click="RemoveFav_Click"
+                            Foreground="Gold"
+                            Style="{StaticResource MaterialDesignFlatButton}">
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="Star" Visibility="{Binding IsFavorite, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                            </DockPanel>
+                        </Button>
 
                         <Button
                             x:Name="AddFav"
-                            Height="22"
+                            Height="16"
                             Padding="0,0,0,0"
+                            Click="AddFav_Click"
                             Style="{StaticResource MaterialDesignFlatButton}">
                             <DockPanel>
-                                <materialDesign:PackIcon Kind="AddAlertOutline" Visibility="Collapsed" />
+                                <materialDesign:PackIcon Kind="StarBorder" Visibility="{Binding ElementName=IsNotFavorite, Path=IsChecked, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}" />
                             </DockPanel>
                         </Button>
 
                         <Button
-                            x:Name="RemoveFav"
-                            Height="22"
+                            x:Name="RemoveAlert"
+                            Height="16"
                             Padding="0,0,0,0"
+                            Click="RemoveAlert_Click"
+                            Foreground="Gold"
                             Style="{StaticResource MaterialDesignFlatButton}">
                             <DockPanel>
-                                <materialDesign:PackIcon Kind="AddAlert" Visibility="Collapsed" />
+                                <materialDesign:PackIcon Kind="AddAlert" Visibility="{Binding AlertOn, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}" />
                             </DockPanel>
                         </Button>
-                        <!--
-                            Todo:お気に入り追加。追加済みの場合の表示とか、追加対象が入室したらアラートとか。
-                        -->
 
+                        <Button
+                            x:Name="AddAlert"
+                            Height="16"
+                            Padding="0,0,0,0"
+                            Click="AddAlert_Click"
+                            Cursor=""
+                            Style="{StaticResource MaterialDesignFlatButton}">
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="AddAlertOutline" Visibility="{Binding ElementName=AlertOff, Path=IsChecked, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                            </DockPanel>
+                        </Button>
+
+                        <TextBlock
+                            x:Name="UserId"
+                            Width="0"
+                            Text="{Binding UserId}"
+                            Visibility="Hidden" />
+                        <CheckBox
+                            x:Name="IsFavorite"
+                            IsChecked="{Binding IsFavorite, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Visibility="Hidden" />
+                        <CheckBox
+                            x:Name="IsNotFavorite"
+                            IsChecked="{Binding IsFavorite, Converter={StaticResource InvertBooleanConverter}}"
+                            Visibility="Hidden" />
+                        <CheckBox
+                            x:Name="AlertOn"
+                            IsChecked="{Binding AlertOn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Visibility="Visible" />
+                        <CheckBox
+                            x:Name="AlertOff"
+                            IsChecked="{Binding AlertOn, Converter={StaticResource InvertBooleanConverter}}"
+                            Visibility="Visible" />
                     </VirtualizingStackPanel>
 
                     <TextBlock
                         Height="Auto"
-                        Margin="20,0,0,0"
+                        Margin="40,0,0,0"
                         Padding="0,0,0,3"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
-                        d:Text="Room Owner's Part"
+                        d:Text="Member's Part"
                         FlowDirection="RightToLeft"
                         FontSize="9"
                         Text="{Binding LastPlayedPart.Part}" />

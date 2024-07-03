@@ -17,7 +17,7 @@ namespace SyncRooms
         private readonly HttpClient? _client;
         private readonly JsonSerializerOptions? _serializerOptions;
 
-        private System.Windows.Threading.DispatcherTimer AutoReloadTimer = new();
+        private readonly System.Windows.Threading.DispatcherTimer AutoReloadTimer = new();
 
         public MainWindow()
         {

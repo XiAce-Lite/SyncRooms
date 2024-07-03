@@ -42,7 +42,7 @@
                         Height="Auto"
                         Padding="14,10,0,0"
                         d:Text="Room Name"
-                        FontSize="18"
+                        FontSize="16"
                         FontWeight="Bold"
                         Foreground="#4a4a4a"
                         Style="{StaticResource MaterialDesignCaptionTextBlock}"

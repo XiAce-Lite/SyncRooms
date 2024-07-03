@@ -1,14 +1,19 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Windows.Input;
+using static SyncRooms.FavoriteMembers;
 
 namespace SyncRooms.ViewModel
 {
     internal class MainWindowViewModel : INotifyPropertyChanged
     {
         public ObservableCollection<Room>? Rooms { get; set; }
-       
+        private static FavRoot? favRoot = new();
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public void OnPropertyChanged([CallerMemberName] string name = "") =>
@@ -18,6 +23,24 @@ namespace SyncRooms.ViewModel
         public MainWindowViewModel()
         {
             Rooms = [];
+
+            string CurDir = Directory.GetCurrentDirectory(); 
+            string JsonFile = System.IO.Path.Combine(CurDir, "favs.json");
+
+            //ファイルがねぇ場合
+            if (!System.IO.Path.Exists(JsonFile))
+            {
+                return;
+            }
+            //ファイル開く。
+            using StreamReader sr = File.OpenText(JsonFile);
+            var jsonReadData = sr.ReadToEnd();
+
+            //中身チェック。あればデシリアライズ
+            if (!string.IsNullOrEmpty(jsonReadData))
+            {
+                favRoot = JsonSerializer.Deserialize<FavRoot>(jsonReadData);
+            }
         }
 
         public class RoomsRoot
@@ -89,6 +112,29 @@ namespace SyncRooms.ViewModel
         {
             [JsonPropertyName("roomEnterType")]
             public string RoomEnterType { get; set; } = string.Empty;
+
+            bool _IsFavorite = false;
+            public bool IsFavorite { 
+                get
+                {
+                    //既にいるか一応チェック。
+                    if (favRoot is not null)
+                    {
+                        foreach (var item in favRoot.Members)
+                        {
+                            if (item.UserId == UserId) { 
+                                return true; 
+                            }
+                        }
+                    }
+                    return _IsFavorite;
+                }
+                set {
+                    _IsFavorite = value;
+                } 
+            }
+
+            public bool AlertOn {  get; set; } = false;           
         }
 
         public class Avatar
