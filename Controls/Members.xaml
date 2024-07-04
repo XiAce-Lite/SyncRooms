@@ -54,8 +54,7 @@
                             FontWeight="Bold"
                             Text="{Binding Nickname}"
                             TextWrapping="NoWrap"
-                            ToolTip="{Binding Nickname}" >
-                        </TextBlock>
+                            ToolTip="{Binding Nickname}" />
 
                         <Button
                             x:Name="AddFav"

@@ -25,12 +25,14 @@
             <VirtualizingStackPanel
                 Background="{Binding NeedPasswd, Converter={StaticResource LockRoomConverter}}"
                 Orientation="Vertical"
+                ScrollViewer.CanContentScroll="true"
                 VirtualizingPanel.IsVirtualizing="True"
                 VirtualizingPanel.ScrollUnit="Pixel"
                 VirtualizingPanel.VirtualizationMode="Recycling">
 
                 <VirtualizingStackPanel
                     Orientation="Horizontal"
+                    ScrollViewer.CanContentScroll="true"
                     VirtualizingPanel.IsVirtualizing="True"
                     VirtualizingPanel.ScrollUnit="Pixel"
                     VirtualizingPanel.VirtualizationMode="Recycling">
@@ -43,7 +45,7 @@
 
                     <TextBlock
                         x:Name="RoomTitle"
-                        Width="290"
+                        Width="280"
                         Height="Auto"
                         Padding="14,10,0,0"
                         d:Text="Room Name"
@@ -59,6 +61,7 @@
 
                 <VirtualizingStackPanel
                     Orientation="Horizontal"
+                    ScrollViewer.CanContentScroll="true"
                     VirtualizingPanel.IsVirtualizing="True"
                     VirtualizingPanel.ScrollUnit="Pixel"
                     VirtualizingPanel.VirtualizationMode="Recycling">
@@ -92,10 +95,10 @@
                     ItemsSource="{Binding Tags}"
                     ScrollViewer.CanContentScroll="True"
                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                    ScrollViewer.IsDeferredScrollingEnabled="True"
                     VirtualizingPanel.IsContainerVirtualizable="True"
                     VirtualizingPanel.IsVirtualizing="True"
                     VirtualizingPanel.ScrollUnit="Pixel"
+                    ScrollViewer.CanContentScroll="true"
                     VirtualizingPanel.VirtualizationMode="Recycling">
 
                     <ItemsControl.ItemTemplate>
@@ -136,7 +139,7 @@
                         FontSize="10"
                         IsReadOnly="True"
                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                        ScrollViewer.VerticalScrollBarVisibility="Disabled"
                         Text="{Binding Description}"
                         TextWrapping="Wrap"
                         ToolTip="{Binding Description}" />
@@ -146,6 +149,12 @@
                     Height="250"
                     Margin="0,-5,0,0"
                     ItemsSource="{Binding Members}">
+                    <ListView.Template>
+                        <ControlTemplate>
+                            <ItemsPresenter />
+                        </ControlTemplate>
+                    </ListView.Template>
+
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <vwp:VirtualizingWrapPanel
@@ -177,7 +186,6 @@
                         <DataTemplate>
                             <VirtualizingStackPanel
                                 Orientation="Horizontal"
-                                ScrollViewer.IsDeferredScrollingEnabled="true"
                                 VirtualizingPanel.IsVirtualizing="True"
                                 VirtualizingPanel.VirtualizationMode="Recycling">
 

@@ -16,7 +16,7 @@ namespace SyncRooms.Controls
     /// </summary>
     public partial class Members : UserControl
     {
-        private readonly string CurDir = "";
+        private readonly string myDoc = "";
         private readonly string JsonFile = "";
         private static JsonSerializerOptions? _serializerOptions;
 
@@ -31,8 +31,8 @@ namespace SyncRooms.Controls
                 WriteIndented = true
             };
 
-            CurDir = Directory.GetCurrentDirectory();
-            JsonFile = System.IO.Path.Combine(CurDir, "favs.json");
+            myDoc = System.Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            JsonFile = System.IO.Path.Combine(myDoc,"SyncRooms","favs.json");
         }
 
         private void WriteToJsonFile(FavRoot? favRoot)

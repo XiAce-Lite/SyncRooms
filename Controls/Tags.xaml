@@ -20,8 +20,6 @@
             <VirtualizingStackPanel
                 Width="Auto"
                 Orientation="Horizontal"
-                ScrollViewer.CanContentScroll="True"
-                ScrollViewer.IsDeferredScrollingEnabled="True"
                 VirtualizingPanel.IsContainerVirtualizable="True"
                 VirtualizingPanel.IsVirtualizing="True"
                 VirtualizingPanel.VirtualizationMode="Recycling">

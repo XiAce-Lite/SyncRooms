@@ -29,9 +29,9 @@
     <Grid>
         <Grid Margin="10,37,0,0">
             <ListView
-                ItemsSource="{Binding Rooms, UpdateSourceTrigger=PropertyChanged}"
+                ItemsSource="{Binding Rooms}"
+                ScrollViewer.CanContentScroll="true"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                ScrollViewer.IsDeferredScrollingEnabled="True"
                 SelectionMode="Single"
                 VirtualizingPanel.IsVirtualizing="True"
                 VirtualizingPanel.VirtualizationMode="Recycling">
@@ -68,7 +68,7 @@
                     <DataTemplate>
                         <VirtualizingStackPanel
                             Orientation="Horizontal"
-                            ScrollViewer.IsDeferredScrollingEnabled="true"
+                            ScrollViewer.CanContentScroll="true"
                             VirtualizingPanel.IsVirtualizing="True"
                             VirtualizingPanel.VirtualizationMode="Recycling">
 
@@ -98,7 +98,7 @@
                         VirtualizingPanel.IsVirtualizing="true"
                         VirtualizingPanel.VirtualizationMode="Recycling">
 
-                        <StackPanel
+                        <VirtualizingStackPanel
                             Margin="15,0,0,0"
                             Cursor=""
                             Orientation="Horizontal">
@@ -108,7 +108,7 @@
                                 FontWeight="DemiBold"
                                 Foreground="#FF3F51B5"
                                 IsChecked="{Binding WindowTopMost, Mode=TwoWay, Source={x:Static prop:Settings.Default}, UpdateSourceTrigger=PropertyChanged}" />
-                        </StackPanel>
+                        </VirtualizingStackPanel>
 
                         <!--
                         <Button
@@ -227,7 +227,7 @@
 
                         <!--
                         <CheckBox
-                            x:Name="Locked"
+                            x:Name="CheckLocked"
                             Margin="15,0,0,0"
                             HorizontalContentAlignment="Stretch"
                             VerticalContentAlignment="Center"
@@ -235,15 +235,34 @@
                             IsChecked="True"
                             Style="{StaticResource MaterialDesignUserForegroundCheckBox}" />
                         <CheckBox
-                            x:Name="Unlocked"
+                            x:Name="CheckUnlocked"
                             Margin="13,0,0,0"
                             HorizontalContentAlignment="Stretch"
                             VerticalContentAlignment="Center"
                             Content="Unlock"
                             IsChecked="True"
                             Style="{StaticResource MaterialDesignUserForegroundCheckBox}" />
+                        <CheckBox
+                            x:Name="CheckJP_Room"
+                            Margin="13,0,0,0"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Center"
+                            Content="JP"
+                            IsChecked="True"
+                            Style="{StaticResource MaterialDesignUserForegroundCheckBox}" />
+                        <CheckBox
+                            x:Name="CheckKR_Room"
+                            Margin="13,0,0,0"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Center"
+                            Content="KR"
+                            IsChecked="True"
+                            Style="{StaticResource MaterialDesignUserForegroundCheckBox}" />
                         -->
 
+                        <!--
+                            テスト用ボタン。色々使う。
+                        -->
                         <Button
                             x:Name="TextButton"
                             Height="20"

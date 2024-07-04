@@ -6,7 +6,6 @@ using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 using System.Windows;
-using Windows.System;
 using static SyncRooms.FavoriteMembers;
 
 namespace SyncRooms
@@ -27,6 +26,9 @@ namespace SyncRooms
 
         public MainWindow()
         {
+            //前のバージョンのプロパティを引き継ぐぜ。
+            Settings.Default.Upgrade();
+
             InitializeComponent();
             _client = new HttpClient();
             _serializerOptions = new JsonSerializerOptions
@@ -76,8 +78,8 @@ namespace SyncRooms
         {
             if (_client is null) { return; }
 
-            string CurDir = Directory.GetCurrentDirectory();
-            string JsonFile = System.IO.Path.Combine(CurDir, "favs.json");
+            string myDoc = System.Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            string JsonFile = System.IO.Path.Combine(myDoc, "SyncRooms", "favs.json");
 
             Uri uri = new("https://webapi.syncroom.appservice.yamaha.com/rooms/guest/online");
             try
@@ -98,6 +100,7 @@ namespace SyncRooms
                                 foreach (var item in json.Rooms)
                                 {
                                     MainVM.Rooms.Add(item);
+
                                     var searchAlert = item.Members.Where(el => el.AlertOn == true).ToList();
                                     if (searchAlert.Count > 0)
                                     {
@@ -204,9 +207,11 @@ namespace SyncRooms
 
         private void TextButton_Click(object sender, RoutedEventArgs e)
         {
+            //マイドキュメント
+            var temp = System.Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             new ToastContentBuilder()
                 .AddText("トーストテスト")
-                .AddText("こんな感じ。")
+                .AddText($"{temp}")
                 .Show();
         }
     }

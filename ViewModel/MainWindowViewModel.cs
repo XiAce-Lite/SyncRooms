@@ -1,8 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Runtime.CompilerServices;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using static SyncRooms.FavoriteMembers;
 
@@ -20,7 +18,6 @@ namespace SyncRooms.ViewModel
         public MainWindowViewModel()
         {
             Rooms = [];
-
         }
 
         public class RoomsRoot
@@ -93,13 +90,13 @@ namespace SyncRooms.ViewModel
 
         public class Member : OwnerUser
         {
-            private readonly string CurDir = string.Empty;
+            private readonly string myDoc = string.Empty;
             private readonly string JsonFile = string.Empty;
-            
+
             public Member()
             {
-                CurDir = Directory.GetCurrentDirectory();
-                JsonFile = System.IO.Path.Combine(CurDir, "favs.json");
+                myDoc = System.Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                JsonFile = JsonFile = System.IO.Path.Combine(myDoc, "SyncRooms", "favs.json");
             }
 
             [JsonPropertyName("roomEnterType")]
@@ -115,6 +112,7 @@ namespace SyncRooms.ViewModel
                     {
                         return false;
                     }
+
                     //ファイル開く。
                     var jsonReadData = Tools.GetJsonData(JsonFile);
 
