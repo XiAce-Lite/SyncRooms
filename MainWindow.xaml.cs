@@ -1,9 +1,13 @@
-﻿using SyncRooms.Properties;
+﻿using Microsoft.Toolkit.Uwp.Notifications;
+using SyncRooms.Properties;
 using SyncRooms.ViewModel;
 using System.Diagnostics;
+using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 using System.Windows;
+using Windows.System;
+using static SyncRooms.FavoriteMembers;
 
 namespace SyncRooms
 {
@@ -18,6 +22,8 @@ namespace SyncRooms
         private readonly JsonSerializerOptions? _serializerOptions;
 
         private readonly System.Windows.Threading.DispatcherTimer AutoReloadTimer = new();
+
+        private List<MainWindowViewModel.Member> Alerted = [];
 
         public MainWindow()
         {
@@ -70,6 +76,9 @@ namespace SyncRooms
         {
             if (_client is null) { return; }
 
+            string CurDir = Directory.GetCurrentDirectory();
+            string JsonFile = System.IO.Path.Combine(CurDir, "favs.json");
+
             Uri uri = new("https://webapi.syncroom.appservice.yamaha.com/rooms/guest/online");
             try
             {
@@ -77,7 +86,7 @@ namespace SyncRooms
                 if (response.IsSuccessStatusCode)
                 {
                     string content = await response.Content.ReadAsStringAsync();
-                    if (content != null)
+                    if (!string.IsNullOrEmpty(content))
                     {
                         var json = JsonSerializer.Deserialize<MainWindowViewModel.RoomsRoot>(content, _serializerOptions);
                         if (json != null)
@@ -85,17 +94,66 @@ namespace SyncRooms
                             if (json.Rooms != null)
                             {
 #nullable disable warnings
-
                                 MainVM.Rooms.Clear();
                                 foreach (var item in json.Rooms)
                                 {
                                     MainVM.Rooms.Add(item);
-#nullable restore
+                                    var searchAlert = item.Members.Where(el => el.AlertOn == true).ToList();
+                                    if (searchAlert.Count > 0)
+                                    {
+                                        foreach (var alertMember in searchAlert)
+                                        {
+                                            var exists = Alerted.Where(el => el.UserId == alertMember.UserId).ToList();
+                                            if (exists.Count == 0)
+                                            {
+                                                new ToastContentBuilder()
+                                                    .AddText($"{alertMember.Nickname}さん({alertMember.LastPlayedPart.Part})が入室しています。")
+                                                    .Show();
+
+                                                Alerted.Add(alertMember);
+                                            }
+                                        }
+                                    }
+                                }
+                                //ここで退室チェックできるんじゃね？
+                                //対象は、AlertOnのJsonから。json.Roomsぶん回してヒットしなければ、退室済み
+                                //Alertedの中から削除する。
+                                //ファイルがある場合のみ。
+                                if (System.IO.Path.Exists(JsonFile))
+                                {
+                                    //ファイル開く。
+                                    var jsonReadData = Tools.GetJsonData(JsonFile);
+
+                                    //中身チェック。あればデシリアライズ
+                                    FavRoot? favRoot = Tools.GetFavoriteRoot(jsonReadData);
+
+                                    //既にいるかチェック。
+                                    if (favRoot is not null)
+                                    {
+                                        foreach (var item in favRoot.Members)
+                                        {
+                                            if (item.AlertOn)
+                                            {
+                                                if (!content.Contains(item.UserId))
+                                                {
+                                                    var removeMember = Alerted.Find(el => el.UserId == item.UserId);
+                                                    if (removeMember is not null)
+                                                    {
+                                                        new ToastContentBuilder()
+                                                            .AddText($"{removeMember.Nickname}さん({removeMember.LastPlayedPart.Part})が退室しました。")
+                                                            .Show();
+                                                        Alerted.Remove(removeMember);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 }
+#nullable restore                                   
             }
             catch (Exception ex)
             {
@@ -106,7 +164,7 @@ namespace SyncRooms
 
         private void GetHTML_Click(object sender, RoutedEventArgs e)
         {
-            _= GetDataAsync();
+            _ = GetDataAsync();
         }
 
         private void BtnExit_Click(object sender, RoutedEventArgs e)
@@ -128,18 +186,28 @@ namespace SyncRooms
         }
 
         private void ReloadTiming_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {           
+        {
             bool IsRunning = false;
 
-            if (AutoReloadTimer.IsEnabled) { 
+            if (AutoReloadTimer.IsEnabled)
+            {
                 IsRunning = true;
-                AutoReloadTimer.Stop(); 
+                AutoReloadTimer.Stop();
             }
             AutoReloadTimer.Interval = TimeSpan.FromSeconds(ReloadTiming.Value);
 
-            if (IsRunning == true) {
+            if (IsRunning == true)
+            {
                 AutoReloadTimer.Start();
             }
+        }
+
+        private void TextButton_Click(object sender, RoutedEventArgs e)
+        {
+            new ToastContentBuilder()
+                .AddText("トーストテスト")
+                .AddText("こんな感じ。")
+                .Show();
         }
     }
 }

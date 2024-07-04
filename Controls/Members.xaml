@@ -40,6 +40,7 @@
                         VirtualizingPanel.IsVirtualizing="True"
                         VirtualizingPanel.ScrollUnit="Pixel"
                         VirtualizingPanel.VirtualizationMode="Recycling">
+
                         <TextBlock
                             x:Name="NickName"
                             Width="190"
@@ -53,27 +54,31 @@
                             FontWeight="Bold"
                             Text="{Binding Nickname}"
                             TextWrapping="NoWrap"
-                            ToolTip="{Binding Nickname}" />
-                        <Button
-                            x:Name="RemoveFav"
-                            Height="16"
-                            Padding="0,0,0,0"
-                            Click="RemoveFav_Click"
-                            Foreground="Gold"
-                            Style="{StaticResource MaterialDesignFlatButton}">
-                            <DockPanel>
-                                <materialDesign:PackIcon Kind="Star" Visibility="{Binding IsFavorite, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                            </DockPanel>
-                        </Button>
+                            ToolTip="{Binding Nickname}" >
+                        </TextBlock>
 
                         <Button
                             x:Name="AddFav"
                             Height="16"
                             Padding="0,0,0,0"
                             Click="AddFav_Click"
-                            Style="{StaticResource MaterialDesignFlatButton}">
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Visibility="{Binding ElementName=CheckIsNotFavorite, Path=IsChecked, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <DockPanel>
-                                <materialDesign:PackIcon Kind="StarBorder" Visibility="{Binding ElementName=IsNotFavorite, Path=IsChecked, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <materialDesign:PackIcon Kind="StarBorder" />
+                            </DockPanel>
+                        </Button>
+
+                        <Button
+                            x:Name="RemoveFav"
+                            Height="16"
+                            Padding="0,0,0,0"
+                            Click="RemoveFav_Click"
+                            Foreground="Gold"
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Visibility="{Binding IsFavorite, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <DockPanel>
+                                <materialDesign:PackIcon Kind="Star" />
                             </DockPanel>
                         </Button>
 
@@ -97,7 +102,7 @@
                             Cursor=""
                             Style="{StaticResource MaterialDesignFlatButton}">
                             <DockPanel>
-                                <materialDesign:PackIcon Kind="AddAlertOutline" Visibility="{Binding ElementName=AlertOff, Path=IsChecked, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <materialDesign:PackIcon Kind="AddAlertOutline" Visibility="{Binding ElementName=CheckAlertOff, Path=IsChecked, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}" />
                             </DockPanel>
                         </Button>
 
@@ -107,21 +112,21 @@
                             Text="{Binding UserId}"
                             Visibility="Hidden" />
                         <CheckBox
-                            x:Name="IsFavorite"
+                            x:Name="CheckIsFavorite"
                             IsChecked="{Binding IsFavorite, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             Visibility="Hidden" />
                         <CheckBox
-                            x:Name="IsNotFavorite"
-                            IsChecked="{Binding IsFavorite, Converter={StaticResource InvertBooleanConverter}}"
+                            x:Name="CheckIsNotFavorite"
+                            IsChecked="{Binding IsFavorite, Mode=TwoWay, Converter={StaticResource InvertBooleanConverter}}"
                             Visibility="Hidden" />
                         <CheckBox
-                            x:Name="AlertOn"
+                            x:Name="CheckAlertOn"
                             IsChecked="{Binding AlertOn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            Visibility="Visible" />
+                            Visibility="Hidden" />
                         <CheckBox
-                            x:Name="AlertOff"
-                            IsChecked="{Binding AlertOn, Converter={StaticResource InvertBooleanConverter}}"
-                            Visibility="Visible" />
+                            x:Name="CheckAlertOff"
+                            IsChecked="{Binding AlertOn, Mode=TwoWay, Converter={StaticResource InvertBooleanConverter}}"
+                            Visibility="Hidden" />
                     </VirtualizingStackPanel>
 
                     <TextBlock

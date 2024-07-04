@@ -221,13 +221,21 @@
                             Margin="5,1,0,0"
                             AutoToolTipPlacement="TopLeft"
                             Foreground="AliceBlue"
-                            ValueChanged="ReloadTiming_ValueChanged"
                             IsEnabled="{Binding ElementName=UseAutoReload, Path=IsChecked}"
-                            Maximum="60"
-                            Minimum="5"
+                            Maximum="120"
+                            Minimum="15"
                             SmallChange="1"
+                            ValueChanged="ReloadTiming_ValueChanged"
                             Value="{Binding ReloadTiming, Mode=TwoWay, Source={x:Static prop:Settings.Default}, UpdateSourceTrigger=PropertyChanged}" />
 
+                        <Button
+                            x:Name="TextButton"
+                            Height="20"
+                            Margin="10,0,0,0"
+                            Click="TextButton_Click"
+                            Content="Test"
+                            FontSize="10"
+                            Visibility="Collapsed" />
                     </VirtualizingStackPanel>
                 </DockPanel>
             </materialDesign:ColorZone>

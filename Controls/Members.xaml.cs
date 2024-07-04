@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Text.Unicode;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using static SyncRooms.FavoriteMembers;
 
 namespace SyncRooms.Controls
@@ -32,26 +33,6 @@ namespace SyncRooms.Controls
 
             CurDir = Directory.GetCurrentDirectory();
             JsonFile = System.IO.Path.Combine(CurDir, "favs.json");
-        }
-
-        private static string GetJsonData(string JsonFile)
-        {
-            using StreamReader sr = File.OpenText(JsonFile);
-            var jsonReadData = sr.ReadToEnd();
-            sr.Close();
-            sr.Dispose();
-            return jsonReadData;
-        }
-
-        private static FavRoot? GetFavoriteRoot(string jsonReadData)
-        {
-            FavRoot? root = new();
-            //中身チェック。あればデシリアライズ
-            if (!string.IsNullOrEmpty(jsonReadData))
-            {
-                root = JsonSerializer.Deserialize<FavRoot>(jsonReadData);
-            }
-            return root;
         }
 
         private void WriteToJsonFile(FavRoot? favRoot)
@@ -85,21 +66,23 @@ namespace SyncRooms.Controls
                 fs.Dispose();
             }
             //ファイル開く。
-            var jsonReadData = GetJsonData(JsonFile);
+            var jsonReadData = Tools.GetJsonData(JsonFile);
 
             //中身チェック。あればデシリアライズ
-            FavRoot? favRoot = GetFavoriteRoot(jsonReadData);
+            FavRoot? favRoot = Tools.GetFavoriteRoot(jsonReadData);
 
             //既にいるか一応チェック。
             if (favRoot is not null)
             {
-                foreach (var item in favRoot.Members)
+                //UseID検索なので、ヒットすれば1のはず。
+                var search = favRoot.Members.Where(el => el.UserId == UserId.Text).ToList();
+                if (search.Count == 1)
                 {
-                    if (item.UserId == UserId.Text) { 
-                        if (AddOnly) { return; }
-                        favRoot.Members.Remove(item);
-                        break;
-                    }
+                    //AddOnly=新規追加なのに、既に居る場合は抜ける。
+                    if (AddOnly) { return; }
+                    favRoot.Members.Remove(search.First());
+                    //Jsonファイルに書き込み
+                    WriteToJsonFile(favRoot);
                 }
             }
 
@@ -116,58 +99,55 @@ namespace SyncRooms.Controls
 
             //Jsonファイルに書き込み
             WriteToJsonFile(favRoot);
-
-            //お気に入りフラグ立てる。
-            IsFavorite.IsChecked = true;
-
         }
 
         private void RemoveFav_Click(object sender, RoutedEventArgs e)
         {
-            //お気に入りフラグ寝かす。
-            IsFavorite.IsChecked = false;
 
             //ファイルがねぇ場合
             if (!System.IO.Path.Exists(JsonFile)) { return; }
 
             //ファイル開く。
-            var jsonReadData = GetJsonData(JsonFile);
+            var jsonReadData = Tools.GetJsonData(JsonFile);
 
             //中身チェック。あればデシリアライズ
-            FavRoot? favRoot = GetFavoriteRoot(jsonReadData);
+            FavRoot? favRoot = Tools.GetFavoriteRoot(jsonReadData);
 
             //既にいるかチェック。居たら削除。
             if (favRoot is not null)
             {
-                foreach (var item in favRoot.Members)
+                //UseID検索なので、ヒットすれば1のはず。
+                var search = favRoot.Members.Where(el => el.UserId == UserId.Text).ToList();
+                if (search.Count == 1)
                 {
-                    if (item.UserId == UserId.Text)
-                    {
-                        //合致したら削除
-                        favRoot.Members.Remove(item);
-                        //Jsonファイルに書き込み
-                        WriteToJsonFile(favRoot);
-                        return;
-                    }
+                    favRoot.Members.Remove(search.First());
+                    //Jsonファイルに書き込み
+                    WriteToJsonFile(favRoot);
                 }
             }
+            //お気に入りフラグ寝かす。
+            CheckIsFavorite.IsChecked = false;
+            CheckAlertOn.IsChecked = false;
         }
 
         private void AddFav_Click(object sender, RoutedEventArgs e)
         {
             AddFavorite();
+            //お気に入りフラグ立てる。
+            CheckIsFavorite.IsChecked = true;
         }
 
         private void AddAlert_Click(object sender, RoutedEventArgs e)
         {
-            AddFavorite(false,true);
-            AlertOn.IsChecked = true;
+            AddFavorite(false, true);
+            CheckAlertOn.IsChecked = true;
+            CheckIsFavorite.IsChecked = true;
         }
 
         private void RemoveAlert_Click(object sender, RoutedEventArgs e)
         {
             AddFavorite(false, false);
-            AlertOn.IsChecked = false;
+            CheckAlertOn.IsChecked = false;
         }
     }
 }

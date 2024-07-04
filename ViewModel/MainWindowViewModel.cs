@@ -4,7 +4,6 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Windows.Input;
 using static SyncRooms.FavoriteMembers;
 
 namespace SyncRooms.ViewModel
@@ -12,35 +11,16 @@ namespace SyncRooms.ViewModel
     internal class MainWindowViewModel : INotifyPropertyChanged
     {
         public ObservableCollection<Room>? Rooms { get; set; }
-        private static FavRoot? favRoot = new();
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public void OnPropertyChanged([CallerMemberName] string name = "") =>
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-
         public MainWindowViewModel()
         {
             Rooms = [];
 
-            string CurDir = Directory.GetCurrentDirectory(); 
-            string JsonFile = System.IO.Path.Combine(CurDir, "favs.json");
-
-            //ファイルがねぇ場合
-            if (!System.IO.Path.Exists(JsonFile))
-            {
-                return;
-            }
-            //ファイル開く。
-            using StreamReader sr = File.OpenText(JsonFile);
-            var jsonReadData = sr.ReadToEnd();
-
-            //中身チェック。あればデシリアライズ
-            if (!string.IsNullOrEmpty(jsonReadData))
-            {
-                favRoot = JsonSerializer.Deserialize<FavRoot>(jsonReadData);
-            }
         }
 
         public class RoomsRoot
@@ -81,8 +61,10 @@ namespace SyncRooms.ViewModel
             public string RoomStatus { get; set; } = string.Empty;
 
             [JsonPropertyName("tags")]
-            public List<string>? Tags {
-                get {
+            public List<string>? Tags
+            {
+                get
+                {
                     if ((_tags is not null) && (CustomTags is not null))
                     {
                         List<string> _tags2 = [.. _tags, .. CustomTags];
@@ -90,7 +72,8 @@ namespace SyncRooms.ViewModel
                     }
                     return _tags;
                 }
-                set {
+                set
+                {
                     _tags = value;
                 }
             }
@@ -105,36 +88,91 @@ namespace SyncRooms.ViewModel
             public OwnerUser? OwnerUser { get; set; }
 
             [JsonPropertyName("members")]
-            public List<Member>? Members { get; set; } = [];
+            public ObservableCollection<Member>? Members { get; set; } = [];
         }
 
         public class Member : OwnerUser
         {
+            private readonly string CurDir = string.Empty;
+            private readonly string JsonFile = string.Empty;
+            
+            public Member()
+            {
+                CurDir = Directory.GetCurrentDirectory();
+                JsonFile = System.IO.Path.Combine(CurDir, "favs.json");
+            }
+
             [JsonPropertyName("roomEnterType")]
             public string RoomEnterType { get; set; } = string.Empty;
 
-            bool _IsFavorite = false;
-            public bool IsFavorite { 
+            private bool _isFavorite = false;
+            public bool IsFavorite
+            {
                 get
                 {
+                    //ファイルがねぇ場合
+                    if (!System.IO.Path.Exists(JsonFile))
+                    {
+                        return false;
+                    }
+                    //ファイル開く。
+                    var jsonReadData = Tools.GetJsonData(JsonFile);
+
+                    //中身チェック。あればデシリアライズ
+                    FavRoot? favRoot = Tools.GetFavoriteRoot(jsonReadData);
+
                     //既にいるか一応チェック。
                     if (favRoot is not null)
                     {
-                        foreach (var item in favRoot.Members)
+                        //UseID検索なので、ヒットすれば1のはず。
+                        var search = favRoot.Members.Where(el => el.UserId == UserId).ToList();
+                        if (search.Count == 1)
                         {
-                            if (item.UserId == UserId) { 
-                                return true; 
-                            }
+                            return true;
                         }
                     }
-                    return _IsFavorite;
+                    return _isFavorite;
                 }
-                set {
-                    _IsFavorite = value;
-                } 
+                set
+                {
+                    _isFavorite = value;
+                }
             }
 
-            public bool AlertOn {  get; set; } = false;           
+            private bool _alertOn = false;
+            public bool AlertOn
+            {
+                get
+                {
+                    //ファイルがねぇ場合
+                    if (!System.IO.Path.Exists(JsonFile))
+                    {
+                        return false;
+                    }
+
+                    //ファイル開く。
+                    var jsonReadData = Tools.GetJsonData(JsonFile);
+
+                    //中身チェック。あればデシリアライズ
+                    FavRoot? favRoot = Tools.GetFavoriteRoot(jsonReadData);
+
+                    //既にいるか一応チェック。
+                    if (favRoot is not null)
+                    {
+                        //UseID検索なので、ヒットすれば1のはず。
+                        var search = favRoot.Members.Where(el => el.UserId == UserId).ToList();
+                        if (search.Count == 1)
+                        {
+                            if (search[0].AlertOn) { return true; }
+                        }
+                    }
+                    return _alertOn;
+                }
+                set
+                {
+                    _alertOn = value;
+                }
+            }
         }
 
         public class Avatar
@@ -202,17 +240,20 @@ namespace SyncRooms.ViewModel
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("part")]
-            public string Part { 
+            public string Part
+            {
                 get
                 {
-                    if (_lastPart == "custom") { 
+                    if (_lastPart == "custom")
+                    {
                         _lastPart = CustomPart;
                     }
                     return _lastPart;
                 }
-                set { 
+                set
+                {
                     _lastPart = value;
-                } 
+                }
             }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -227,7 +268,8 @@ namespace SyncRooms.ViewModel
 
             private string _nickname = "";
             [JsonPropertyName("nickname")]
-            public string Nickname {
+            public string Nickname
+            {
                 get
                 {
                     if (string.IsNullOrEmpty(_nickname))
@@ -238,7 +280,7 @@ namespace SyncRooms.ViewModel
                 }
                 set
                 {
-                    _nickname = value; 
+                    _nickname = value;
                 }
             }
 
