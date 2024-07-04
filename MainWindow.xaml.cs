@@ -23,7 +23,7 @@ namespace SyncRooms
 
         private readonly System.Windows.Threading.DispatcherTimer AutoReloadTimer = new();
 
-        private List<MainWindowViewModel.Member> Alerted = [];
+        private readonly List<MainWindowViewModel.Member> Alerted = [];
 
         public MainWindow()
         {

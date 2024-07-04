@@ -186,20 +186,17 @@
                             FontSize="10"
                             Foreground="White" />
 
-                        <Label
-                            Margin="16,0,0,0"
-                            VerticalAlignment="Center"
-                            Content="Auto Reload"
-                            DockPanel.Dock="Top"
-                            FontSize="10"
-                            Foreground="White" />
-
                         <CheckBox
                             x:Name="UseAutoReload"
-                            Width="22"
                             Height="22"
-                            Margin="4,0,0,0"
+                            Margin="13,0,0,0"
+                            Padding="4,1,0,0"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Center"
                             Click="UseAutoReload_Click"
+                            Content="Auto Reload"
+                            FlowDirection="RightToLeft"
+                            FontSize="10"
                             IsChecked="{Binding UseAutoReload, Mode=TwoWay, Source={x:Static prop:Settings.Default}, UpdateSourceTrigger=PropertyChanged}"
                             Style="{DynamicResource MaterialDesignUserForegroundCheckBox}">
                             <CheckBox.BorderBrush>
@@ -228,12 +225,32 @@
                             ValueChanged="ReloadTiming_ValueChanged"
                             Value="{Binding ReloadTiming, Mode=TwoWay, Source={x:Static prop:Settings.Default}, UpdateSourceTrigger=PropertyChanged}" />
 
+                        <!--
+                        <CheckBox
+                            x:Name="Locked"
+                            Margin="15,0,0,0"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Center"
+                            Content="Locked"
+                            IsChecked="True"
+                            Style="{StaticResource MaterialDesignUserForegroundCheckBox}" />
+                        <CheckBox
+                            x:Name="Unlocked"
+                            Margin="13,0,0,0"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Center"
+                            Content="Unlock"
+                            IsChecked="True"
+                            Style="{StaticResource MaterialDesignUserForegroundCheckBox}" />
+                        -->
+
                         <Button
                             x:Name="TextButton"
                             Height="20"
                             Margin="10,0,0,0"
                             Click="TextButton_Click"
                             Content="Test"
+                            Cursor="Hand"
                             FontSize="10"
                             Visibility="Collapsed" />
                     </VirtualizingStackPanel>
