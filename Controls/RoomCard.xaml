@@ -135,32 +135,26 @@
                 </ItemsControl>
                 -->
 
-                <materialDesign:Card
-                    Width="280"
-                    Margin="6,0,6,6"
-                    HorizontalAlignment="Left"
-                    Background="#f9fcff">
-
-                    <TextBox
-                        x:Name="RoomDescription"
+                <materialDesign:Card Margin="6,0,6,4" UniformCornerRadius="4" Width="279">
+                    <ScrollViewer
                         Height="70"
-                        Padding="10,10,10,10"
-                        VerticalContentAlignment="Top"
-                        d:Text="Room Description"
-                        Background="#f9fcff"
-                        FontSize="10"
-                        IsReadOnly="True"
-                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                        ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                        Text="{Binding Description}"
-                        TextWrapping="Wrap"
-                        ToolTip="{Binding Description}" />
+                        CanContentScroll="True"
+                        Style="{StaticResource MaterialDesignScrollViewer}"
+                        VerticalScrollBarVisibility="Auto">
+                        <TextBlock
+                            x:Name="RoomDescription"
+                            Padding="5,5,5,5"
+                            d:Text="Room Description"
+                            local:NavigationService.Text="{Binding Description}"
+                            Background="#f9fcff"
+                            FontSize="11"
+                            TextWrapping="Wrap"
+                            ToolTip="{Binding Description}" />
+                    </ScrollViewer>
                 </materialDesign:Card>
 
-                <ListView
-                    Height="250"
-                    Margin="0,-5,0,0"
-                    ItemsSource="{Binding Members}">
+
+                <ListView Height="250" ItemsSource="{Binding Members}">
                     <ListView.Template>
                         <ControlTemplate>
                             <ItemsPresenter />

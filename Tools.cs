@@ -52,8 +52,18 @@ namespace SyncRooms
             //コレクションを配列にして返す
             return (Process[])list.ToArray(typeof(Process));
         }
- 
-    
+
+        public static void OpenUrl(string url)
+        {
+            ProcessStartInfo pi = new()
+            {
+                FileName = url,
+                UseShellExecute = true,
+            };
+
+            Process.Start(pi);
+        }
+
         public static async void EnterRoom(string RoomId = "")
         {
             if (string.IsNullOrEmpty(RoomId)) { return; }

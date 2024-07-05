@@ -43,8 +43,15 @@ namespace SyncRooms.ViewModel
             [JsonPropertyName("name")]
             public string Name { get; set; } = string.Empty;
 
+            private string _description = string.Empty;
             [JsonPropertyName("description")]
-            public string Description { get; set; } = string.Empty;
+            public string Description {
+                get => _description;
+                set
+                {
+                    _description = value.Trim();
+                }
+            }
 
             [JsonPropertyName("roomPurpose")]
             public string RoomPurpose { get; set; } = string.Empty;
