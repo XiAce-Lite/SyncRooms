@@ -1,10 +1,5 @@
-﻿using System;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Automation;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Interop;
 
 namespace SyncRooms.Controls
 {
@@ -23,84 +18,9 @@ namespace SyncRooms.Controls
             Clipboard.SetDataObject(RoomId.Text);
         }
 
-        private async void EnterRoom_Click(object sender, RoutedEventArgs e)
+        private void EnterRoom_Click(object sender, RoutedEventArgs e)
         {
-            TargetProcess targetProc = new("SYNCROOM2");
-            if (targetProc.IsAlive == false)
-            {
-                return;
-            }
-
-            //タイトル検索なので、他のプロセスでも"SYNCROOM"が入ってると…
-            Process[] procs = Tools.GetProcessesByWindowTitle("SYNCROOM");
-            if (procs.Length == 0)
-            {
-                return;
-            }
-
-            AutomationElement? rootElement = null;
-            foreach (Process proc in procs)
-            {
-                if (proc.MainWindowTitle == "SYNCROOM")
-                {
-                    //MainWindotTitle が "SYNCROOM"なプロセス＝ターゲットのプロセスは、SYNCROOM2.exeが中で作った別プロセスのようで
-                    //こんな面倒なやり方をしてみている。
-                    rootElement = AutomationElement.FromHandle(proc.MainWindowHandle);
-                    break;
-                }
-            }
-
-            if (rootElement is null)
-            {
-                return;
-            }
-
-            AutomationElement? webArea = rootElement.FindFirst(TreeScope.Children | TreeScope.Descendants,
-                                                                new PropertyCondition(AutomationElement.AutomationIdProperty, "RootWebArea"));
-            if (webArea is null)
-            {
-                return;
-            }
-
-            AutomationElement? list = webArea.FindFirst(TreeScope.Element | TreeScope.Descendants,
-                                                    new PropertyCondition(AutomationElement.AutomationIdProperty, "list"));
-
-            TreeWalker twCardClass = new(new PropertyCondition(AutomationElement.ClassNameProperty, 
-                                        "v-card v-theme--base v-card--density-default elevation-0 v-card--variant-elevated room-card"));
-
-            TreeWalker twEdit = new(new PropertyCondition(AutomationElement.LocalizedControlTypeProperty, "編集", PropertyConditionFlags.IgnoreCase));
-
-            AutomationElement vClassCard = twCardClass.GetFirstChild(list);
-            if (vClassCard is null) { return; }
-
-            AutomationElement editElement = twEdit.GetFirstChild(vClassCard);
-            AutomationElement txtBoxId = twEdit.GetFirstChild(editElement);
-
-            if (txtBoxId is null) { return; }
-
-            TreeWalker twClear = new(new PropertyCondition(AutomationElement.NameProperty, "Clear xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", PropertyConditionFlags.IgnoreCase));
-            AutomationElement ClearButton = twClear.GetFirstChild(vClassCard);
-            if (ClearButton is not null) {
-                if (ClearButton.GetCurrentPattern(InvokePattern.Pattern) is InvokePattern clearBtn)
-                {
-                    clearBtn.Invoke();
-                }
-            }
-
-            if (txtBoxId.TryGetCurrentPattern(ValuePattern.Pattern, out object valuePattern))
-            {
-                ((ValuePattern)valuePattern).SetValue(RoomId.Text);
-            }
-
-            TreeWalker twButton = new(new PropertyCondition(AutomationElement.NameProperty, "ENTER", PropertyConditionFlags.IgnoreCase));
-            AutomationElement EditButton = twButton.GetFirstChild(vClassCard);
-            if (EditButton is null) { return; }
-
-            await Task.Delay(500);
-            if (EditButton.GetCurrentPattern(InvokePattern.Pattern) is InvokePattern btn)
-            {
-                btn.Invoke();
-            }
+            Tools.EnterRoom(RoomId.Text);
         }
     }
 }

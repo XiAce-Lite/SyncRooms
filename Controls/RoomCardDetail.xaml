@@ -1,12 +1,229 @@
-﻿<UserControl x:Class="SyncRooms.Controls.RoomCardDetail"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:SyncRooms.Controls"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+﻿<UserControl
+    x:Class="SyncRooms.Controls.RoomCardDetail"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:SyncRooms.Controls"
+    xmlns:cv="clr-namespace:SyncRooms.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:SyncRooms"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:SyncRooms.ViewModel"
+    xmlns:vwp="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
+    d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <cv:LockedRoomBackColorConverter x:Key="LockRoomConverter" />
+    </UserControl.Resources>
+
+    <Grid Width="1318">
+        <materialDesign:Card
+            Width="Auto"
+            Height="80"
+            Margin="2,0,5,5"
+            UniformCornerRadius="10">
+            <VirtualizingStackPanel
+                Background="{Binding NeedPasswd, Converter={StaticResource LockRoomConverter}}"
+                Orientation="Horizontal"
+                ScrollViewer.CanContentScroll="true"
+                VirtualizingPanel.IsVirtualizing="True"
+                VirtualizingPanel.ScrollUnit="Pixel"
+                VirtualizingPanel.VirtualizationMode="Recycling">
+
+                <VirtualizingStackPanel
+                    Orientation="Vertical"
+                    ScrollViewer.CanContentScroll="true"
+                    VirtualizingPanel.IsVirtualizing="True"
+                    VirtualizingPanel.ScrollUnit="Pixel"
+                    VirtualizingPanel.VirtualizationMode="Recycling">
+
+                    <VirtualizingStackPanel
+                        Orientation="Horizontal"
+                        ScrollViewer.CanContentScroll="true"
+                        VirtualizingPanel.IsVirtualizing="True"
+                        VirtualizingPanel.ScrollUnit="Pixel"
+                        VirtualizingPanel.VirtualizationMode="Recycling">
+                        <!--
+                        <materialDesign:PackIcon
+                            x:Name="IsLocked"
+                            Margin="5,7,0,0"
+                            Background="White"
+                            Kind="LockOutline"
+                            Visibility="{Binding NeedPasswd, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        -->
+
+                        <TextBlock
+                            x:Name="RoomTitle"
+                            Width="263"
+                            Height="Auto"
+                            Padding="14,10,0,0"
+                            d:Text="Room Name"
+                            FontSize="16"
+                            FontWeight="Bold"
+                            Foreground="#4a4a4a"
+                            Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                            Text="{Binding Name}"
+                            TextWrapping="NoWrap"
+                            ToolTip="{Binding Name}" />
+
+                    </VirtualizingStackPanel>
+
+                    <VirtualizingStackPanel
+                        Orientation="Vertical"
+                        ScrollViewer.CanContentScroll="true"
+                        VirtualizingPanel.IsVirtualizing="True"
+                        VirtualizingPanel.ScrollUnit="Pixel"
+                        VirtualizingPanel.VirtualizationMode="Recycling">
+                        <Grid Margin="10,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="24" />
+                                <ColumnDefinition Width="24" />
+                                <ColumnDefinition Width="200" />
+                            </Grid.ColumnDefinitions>
+                            <Button
+                                x:Name="RoomIdCopy"
+                                Grid.Column="0"
+                                Margin="7,0,0,0"
+                                Padding="0,0,0,0"
+                                Click="RoomIdCopy_Click"
+                                Style="{StaticResource MaterialDesignFlatButton}">
+                                <DockPanel>
+                                    <materialDesign:PackIcon Kind="ContentCopy" />
+                                </DockPanel>
+                            </Button>
+
+                            <Button
+                                x:Name="EnterRoom"
+                                Grid.Column="1"
+                                Margin="5,0,0,0"
+                                Padding="0,0,0,0"
+                                Click="EnterRoom_Click"
+                                Style="{StaticResource MaterialDesignFlatButton}">
+                                <DockPanel>
+                                    <materialDesign:PackIcon Kind="DoorOpen" />
+                                </DockPanel>
+                            </Button>
+                            <TextBlock
+                                x:Name="RoomId"
+                                Grid.Column="2"
+                                Padding="0,10,0,0"
+                                HorizontalAlignment="Right"
+                                d:Text="RoomId"
+                                FontSize="10"
+                                FontWeight="Bold"
+                                Foreground="#4a4a4a"
+                                Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                Text="{Binding RoomId}"
+                                ToolTip="{Binding RoomId}" />
+
+                        </Grid>
+                    </VirtualizingStackPanel>
+
+                </VirtualizingStackPanel>
+                <VirtualizingStackPanel Margin="2,3,0,4" Orientation="Horizontal">
+                    <!--
+                <ItemsControl
+                    Height="Auto"
+                    ItemsSource="{Binding Tags}"
+                    ScrollViewer.CanContentScroll="True"
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                    VirtualizingPanel.IsContainerVirtualizable="True"
+                    VirtualizingPanel.IsVirtualizing="True"
+                    VirtualizingPanel.ScrollUnit="Pixel"
+                    ScrollViewer.CanContentScroll="true"
+                    VirtualizingPanel.VirtualizationMode="Recycling">
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <controls:Tags DataContext="{Binding}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel
+                                Width="Auto"
+                                Height="Auto"
+                                MinHeight="62"
+                                MaxWidth="400"
+                                MaxHeight="110"
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                VirtualizingPanel.IsVirtualizing="True"
+                                VirtualizingPanel.VirtualizationMode="Recycling" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+                    -->
+
+                    <materialDesign:Card
+                        Width="180"
+                        Margin="3,2,0,0"
+                        Background="#f9fcff">
+                        <TextBox
+                            x:Name="RoomDescription"
+                            Padding="5,4,4,4"
+                            VerticalContentAlignment="Top"
+                            d:Text="Room Description"
+                            Background="#f9fcff"
+                            FontSize="10"
+                            IsReadOnly="True"
+                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                            ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                            Text="{Binding Description}"
+                            TextWrapping="Wrap"
+                            ToolTip="{Binding Description}" />
+                    </materialDesign:Card>
+
+                    <ListView ItemsSource="{Binding Members}">
+                        <ListView.Template>
+                            <ControlTemplate>
+                                <ItemsPresenter />
+                            </ControlTemplate>
+                        </ListView.Template>
+
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <vwp:VirtualizingWrapPanel
+                                    Orientation="Horizontal"
+                                    SpacingMode="StartAndEndOnly"
+                                    StretchItems="True"
+                                    VirtualizingPanel.IsVirtualizing="True" />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalAlignment" Value="Left" />
+                                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                                <Setter Property="VerticalContentAlignment" Value="Center" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ContentControl}">
+                                            <Border Background="{TemplateBinding Background}">
+                                                <ContentPresenter />
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <VirtualizingStackPanel
+                                    Orientation="Horizontal"
+                                    VirtualizingPanel.IsVirtualizing="True"
+                                    VirtualizingPanel.VirtualizationMode="Recycling">
+
+                                    <controls:Members />
+
+                                </VirtualizingStackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </VirtualizingStackPanel>
+            </VirtualizingStackPanel>
+        </materialDesign:Card>
     </Grid>
 </UserControl>
