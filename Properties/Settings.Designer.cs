@@ -82,5 +82,53 @@ namespace SyncRooms.Properties {
                 this["UseAutoReload"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsVisibleJp {
+            get {
+                return ((bool)(this["IsVisibleJp"]));
+            }
+            set {
+                this["IsVisibleJp"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsVisibleKr {
+            get {
+                return ((bool)(this["IsVisibleKr"]));
+            }
+            set {
+                this["IsVisibleKr"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsVisibleLocked {
+            get {
+                return ((bool)(this["IsVisibleLocked"]));
+            }
+            set {
+                this["IsVisibleLocked"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsVisibleUnlocked {
+            get {
+                return ((bool)(this["IsVisibleUnlocked"]));
+            }
+            set {
+                this["IsVisibleUnlocked"] = value;
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 using static SyncRooms.FavoriteMembers;
+using SyncRooms.Properties;
 
 namespace SyncRooms.ViewModel
 {
@@ -86,6 +87,22 @@ namespace SyncRooms.ViewModel
 
             [JsonPropertyName("members")]
             public ObservableCollection<Member>? Members { get; set; } = [];
+
+            public bool IsExistFavorite {
+                get
+                {
+#nullable disable warnings
+                    foreach (var item in Members)
+                    {
+                        if (item.IsFavorite)
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+#nullable restore warnings
+                }
+            }
         }
 
         public class Member : OwnerUser

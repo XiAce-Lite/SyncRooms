@@ -5,7 +5,7 @@
     xmlns:controls="clr-namespace:SyncRooms.Controls"
     xmlns:cv="clr-namespace:SyncRooms.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:SyncRooms.Controls"
+    xmlns:local="clr-namespace:SyncRooms"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:SyncRooms.ViewModel"
@@ -67,7 +67,7 @@
                     VirtualizingPanel.VirtualizationMode="Recycling">
                     <TextBlock
                         x:Name="RoomId"
-                        Margin="60,0,0,0"
+                        Margin="40,0,0,0"
                         Padding="0,10,0,0"
                         HorizontalAlignment="Right"
                         d:Text="RoomId"
@@ -80,11 +80,23 @@
 
                     <Button
                         x:Name="RoomIdCopy"
-                        Padding="5,0,0,0"
+                        Margin="7,0,0,0"
+                        Padding="0,0,0,0"
                         Click="RoomIdCopy_Click"
                         Style="{StaticResource MaterialDesignFlatButton}">
                         <DockPanel>
                             <materialDesign:PackIcon Kind="ContentCopy" />
+                        </DockPanel>
+                    </Button>
+
+                    <Button
+                        x:Name="EnterRoom"
+                        Margin="5,0,0,0"
+                        Padding="0,0,0,0"
+                        Click="EnterRoom_Click"
+                        Style="{StaticResource MaterialDesignFlatButton}">
+                        <DockPanel>
+                            <materialDesign:PackIcon Kind="DoorOpen" />
                         </DockPanel>
                     </Button>
                 </VirtualizingStackPanel>

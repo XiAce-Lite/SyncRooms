@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Windows;
 using static SyncRooms.FavoriteMembers;
+using static SyncRooms.ViewModel.MainWindowViewModel;
 
 namespace SyncRooms
 {
@@ -96,10 +97,19 @@ namespace SyncRooms
                             if (json.Rooms != null)
                             {
 #nullable disable warnings
+                                var ordered = json.Rooms.OrderByDescending(x => x.IsExistFavorite);
                                 MainVM.Rooms.Clear();
-                                foreach (var item in json.Rooms)
+                                foreach (var item in ordered)
                                 {
-                                    MainVM.Rooms.Add(item);
+                                    if (((item.OwnerUser?.IdProvider == "ymid-jp") && (Settings.Default.IsVisibleJp) ||
+                                        (item.OwnerUser?.IdProvider == "ymid-kr") && (Settings.Default.IsVisibleKr)) &&
+                                        ((item.NeedPasswd == true) && (Settings.Default.IsVisibleLocked) ||
+                                        (item.NeedPasswd == false) && (Settings.Default.IsVisibleUnlocked)) ||
+                                        (item.IsTestRoom == true)
+                                        )
+                                    {
+                                        MainVM.Rooms.Add(item);
+                                    }
 
                                     var searchAlert = item.Members.Where(el => el.AlertOn == true).ToList();
                                     if (searchAlert.Count > 0)
@@ -118,6 +128,7 @@ namespace SyncRooms
                                         }
                                     }
                                 }
+                                
                                 //ここで退室チェックできるんじゃね？
                                 //対象は、AlertOnのJsonから。json.Roomsぶん回してヒットしなければ、退室済み
                                 //Alertedの中から削除する。
@@ -213,6 +224,27 @@ namespace SyncRooms
                 .AddText("トーストテスト")
                 .AddText($"{temp}")
                 .Show();
+        }
+
+        private void Option_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.Save();
+            bool IsRunning = false;
+
+            if (AutoReloadTimer.IsEnabled)
+            {
+                IsRunning = true;
+                AutoReloadTimer.Stop();
+            }
+
+            _ = GetDataAsync();
+
+            AutoReloadTimer.Interval = TimeSpan.FromSeconds(ReloadTiming.Value);
+
+            if (IsRunning == true)
+            {
+                AutoReloadTimer.Start();
+            }
         }
     }
 }

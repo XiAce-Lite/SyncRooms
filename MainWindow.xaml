@@ -15,7 +15,7 @@
     Height="720"
     d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
     Style="{StaticResource MaterialDesignWindow}"
-    Topmost="{Binding WindowTopMost, Source={x:Static prop:Settings.Default}, UpdateSourceTrigger=PropertyChanged}"
+    Topmost="{Binding WindowTopMost, Mode=TwoWay, Source={x:Static prop:Settings.Default}, UpdateSourceTrigger=PropertyChanged}"
     mc:Ignorable="d">
 
     <Window.DataContext>
@@ -41,7 +41,7 @@
                         <vwp:VirtualizingWrapPanel
                             Orientation="Horizontal"
                             SpacingMode="StartAndEndOnly"
-                            StretchItems="False"
+                            StretchItems="True"
                             VirtualizingPanel.IsVirtualizing="True"
                             VirtualizingPanel.VirtualizationMode="Recycling" />
                     </ItemsPanelTemplate>
@@ -225,40 +225,42 @@
                             ValueChanged="ReloadTiming_ValueChanged"
                             Value="{Binding ReloadTiming, Mode=TwoWay, Source={x:Static prop:Settings.Default}, UpdateSourceTrigger=PropertyChanged}" />
 
-                        <!--
                         <CheckBox
-                            x:Name="CheckLocked"
+                            x:Name="CheckJP_Room"
                             Margin="15,0,0,0"
                             HorizontalContentAlignment="Stretch"
                             VerticalContentAlignment="Center"
-                            Content="Locked"
-                            IsChecked="True"
-                            Style="{StaticResource MaterialDesignUserForegroundCheckBox}" />
-                        <CheckBox
-                            x:Name="CheckUnlocked"
-                            Margin="13,0,0,0"
-                            HorizontalContentAlignment="Stretch"
-                            VerticalContentAlignment="Center"
-                            Content="Unlock"
-                            IsChecked="True"
-                            Style="{StaticResource MaterialDesignUserForegroundCheckBox}" />
-                        <CheckBox
-                            x:Name="CheckJP_Room"
-                            Margin="13,0,0,0"
-                            HorizontalContentAlignment="Stretch"
-                            VerticalContentAlignment="Center"
+                            Click="Option_Click"
                             Content="JP"
-                            IsChecked="True"
+                            IsChecked="{Binding IsVisibleJp, Mode=TwoWay, Source={x:Static prop:Settings.Default}, UpdateSourceTrigger=PropertyChanged}"
                             Style="{StaticResource MaterialDesignUserForegroundCheckBox}" />
                         <CheckBox
                             x:Name="CheckKR_Room"
                             Margin="13,0,0,0"
                             HorizontalContentAlignment="Stretch"
                             VerticalContentAlignment="Center"
+                            Click="Option_Click"
                             Content="KR"
-                            IsChecked="True"
+                            IsChecked="{Binding IsVisibleKr, Mode=TwoWay, Source={x:Static prop:Settings.Default}, UpdateSourceTrigger=PropertyChanged}"
                             Style="{StaticResource MaterialDesignUserForegroundCheckBox}" />
-                        -->
+                        <CheckBox
+                            x:Name="CheckLocked"
+                            Margin="15,0,0,0"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Center"
+                            Click="Option_Click"
+                            Content="Locked"
+                            IsChecked="{Binding IsVisibleLocked, Mode=TwoWay, Source={x:Static prop:Settings.Default}, UpdateSourceTrigger=PropertyChanged}"
+                            Style="{StaticResource MaterialDesignUserForegroundCheckBox}" />
+                        <CheckBox
+                            x:Name="CheckUnlocked"
+                            Margin="13,0,0,0"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Center"
+                            Click="Option_Click"
+                            Content="Unlock"
+                            IsChecked="{Binding IsVisibleUnlocked, Mode=TwoWay, Source={x:Static prop:Settings.Default}, UpdateSourceTrigger=PropertyChanged}"
+                            Style="{StaticResource MaterialDesignUserForegroundCheckBox}" />
 
                         <!--
                             テスト用ボタン。色々使う。
