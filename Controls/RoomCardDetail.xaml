@@ -156,23 +156,22 @@
                 </ItemsControl>
                     -->
 
-                    <materialDesign:Card
-                        Width="180"
-                        Margin="3,2,0,0"
-                        Background="#f9fcff">
-                        <TextBox
+                    <materialDesign:Card Margin="6,5,6,1" UniformCornerRadius="4" Width="279">
+                        <ScrollViewer
+                        Height="70"
+                        CanContentScroll="True"
+                        Style="{StaticResource MaterialDesignScrollViewer}"
+                        VerticalScrollBarVisibility="Auto">
+                            <TextBlock
                             x:Name="RoomDescription"
-                            Padding="5,4,4,4"
-                            VerticalContentAlignment="Top"
+                            Padding="5,5,5,5"
                             d:Text="Room Description"
+                            local:NavigationService.Text="{Binding Description}"
                             Background="#f9fcff"
-                            FontSize="10"
-                            IsReadOnly="True"
-                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                            ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                            Text="{Binding Description}"
+                            FontSize="11"
                             TextWrapping="Wrap"
                             ToolTip="{Binding Description}" />
+                        </ScrollViewer>
                     </materialDesign:Card>
 
                     <ListView ItemsSource="{Binding Members}">

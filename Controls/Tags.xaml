@@ -19,7 +19,7 @@
             CornerRadius="4">
             <VirtualizingStackPanel
                 Width="Auto"
-                Orientation="Horizontal"
+                Orientation="Vertical"
                 VirtualizingPanel.IsContainerVirtualizable="True"
                 VirtualizingPanel.IsVirtualizing="True"
                 VirtualizingPanel.VirtualizationMode="Recycling">

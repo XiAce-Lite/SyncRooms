@@ -100,7 +100,7 @@ namespace SyncRooms
                             if (json.Rooms != null)
                             {
 #nullable disable warnings
-                                var ordered = json.Rooms.OrderByDescending(x => x.IsExistFavorite);
+                                var ordered = json.Rooms.OrderByDescending(x => x.IsExistFavorite).ThenByDescending(x => x.IsExistAlertOn);
                                 MainVM.Rooms.Clear();
                                 foreach (var item in ordered)
                                 {
@@ -123,7 +123,7 @@ namespace SyncRooms
                                             if (exists.Count == 0)
                                             {
                                                 new ToastContentBuilder()
-                                                    .AddText($"{alertMember.Nickname}さん({alertMember.LastPlayedPart.Part})が入室しています。")
+                                                    .AddText($"{alertMember.Nickname}さん({alertMember.LastPlayedPart.Part})が「{item.Name}」に入室しています。")
                                                     .Show();
 
                                                 Alerted.Add(alertMember);

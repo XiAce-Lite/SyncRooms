@@ -95,6 +95,24 @@ namespace SyncRooms.ViewModel
             [JsonPropertyName("members")]
             public ObservableCollection<Member>? Members { get; set; } = [];
 
+
+            public bool IsExistAlertOn
+            {
+                get
+                {
+#nullable disable warnings
+                    foreach (var item in Members)
+                    {
+                        if (item.AlertOn)
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+#nullable restore warnings
+                }
+            }
+
             public bool IsExistFavorite {
                 get
                 {

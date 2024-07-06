@@ -29,12 +29,14 @@
     <Grid>
         <Grid Margin="10,37,0,0">
             <ListView
+                x:Name="PanelView"
                 ItemsSource="{Binding Rooms}"
                 ScrollViewer.CanContentScroll="true"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                 SelectionMode="Single"
                 VirtualizingPanel.IsVirtualizing="True"
-                VirtualizingPanel.VirtualizationMode="Recycling">
+                VirtualizingPanel.VirtualizationMode="Recycling"
+                Visibility="{Binding ElementName=PanelOption, Path=IsChecked, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}">
 
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -79,6 +81,76 @@
                 </ListView.ItemTemplate>
 
             </ListView>
+
+            <!--
+            <DataGrid
+                x:Name="DetailView"
+                ItemsSource="{Binding Rooms}"
+                ScrollViewer.CanContentScroll="true"
+                SelectionMode="Single"
+                VirtualizingPanel.IsVirtualizing="True"
+                VirtualizingPanel.VirtualizationMode="Recycling"
+                Visibility="{Binding ElementName=DetailOption, Path=IsChecked, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <DataGrid.Columns>
+
+                    <DataGridTemplateColumn CanUserSort="True" Header="ルーム名">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <VirtualizingStackPanel
+                                    Orientation="Vertical"
+                                    ScrollViewer.IsDeferredScrollingEnabled="true"
+                                    VirtualizingPanel.IsVirtualizing="True"
+                                    VirtualizingPanel.VirtualizationMode="Recycling">
+
+                                    <TextBlock
+                                        FontWeight="Bold"
+                                        Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                                        TextWrapping="Wrap" />
+
+                                    <TextBlock
+                                        Margin="10,10,0,0"
+                                        Text="{Binding RoomId, UpdateSourceTrigger=PropertyChanged}"
+                                        TextWrapping="Wrap" />
+
+                                </VirtualizingStackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+
+                    </DataGridTemplateColumn>
+
+
+                    <DataGridTextColumn
+                        Width="200"
+                        Binding="{Binding Description}"
+                        Header="ルーム説明" />
+
+                    <DataGridTextColumn
+                        Width="Auto"
+                        Binding="{Binding Members[0].Nickname}"
+                        Header="メンバー1" />
+                    <DataGridTextColumn
+                        Width="Auto"
+                        Binding="{Binding Members[1].Nickname}"
+                        Header="メンバー2" />
+                    <DataGridTextColumn
+                        Width="Auto"
+                        Binding="{Binding Members[2].Nickname}"
+                        Header="メンバー3" />
+                    <DataGridTextColumn
+                        Width="Auto"
+                        Binding="{Binding Members[3].Nickname}"
+                        Header="メンバー4" />
+                    <DataGridTextColumn
+                        Width="Auto"
+                        Binding="{Binding Members[4].Nickname}"
+                        Header="メンバー5" />
+                    <DataGridTextColumn
+                        Width="Auto"
+                        Binding="{Binding Members[5].Nickname}"
+                        Header="メンバー6" />
+                </DataGrid.Columns>
+            </DataGrid>
+            -->
 
         </Grid>
 
@@ -262,6 +334,23 @@
                             IsChecked="{Binding IsVisibleUnlocked, Mode=TwoWay, Source={x:Static prop:Settings.Default}, UpdateSourceTrigger=PropertyChanged}"
                             Style="{StaticResource MaterialDesignUserForegroundCheckBox}" />
 
+                        <!--
+                        <RadioButton
+                            x:Name="PanelOption"
+                            Margin="14,0,0,0"
+                            Content="Panel"
+                            GroupName="ViewOption"
+                            IsChecked="True"
+                            Style="{StaticResource MaterialDesignUserForegroundRadioButton}" />
+                        <RadioButton
+                            x:Name="DetailOption"
+                            Margin="4,0,0,0"
+                            Content="Detail"
+                            GroupName="ViewOption"
+                            IsChecked="False"
+                            Style="{StaticResource MaterialDesignUserForegroundRadioButton}" />
+
+                        -->
                         <!--
                             テスト用ボタン。色々使う。
                         -->

@@ -37,36 +37,48 @@ namespace SyncRooms
             text_block.Inlines.Clear();
 
             var new_text = (string)e.NewValue;
-            if (string.IsNullOrEmpty(new_text))
-                return;
+            if (string.IsNullOrEmpty(new_text)) { return; }
 
-            // Find all URLs using a regular expression
-            int last_pos = 0;
-            foreach (Match match in RE_URL.Matches(new_text))
+            try
             {
-                // Copy raw string from the last position up to the match
-                if (match.Index != last_pos)
+                // Find all URLs using a regular expression
+                int last_pos = 0;
+                foreach (Match match in RE_URL.Matches(new_text))
                 {
-                    var raw_text = new_text[last_pos..match.Index];
-                    text_block.Inlines.Add(new Run(raw_text));
+                    // Copy raw string from the last position up to the match
+                    if (match.Index != last_pos)
+                    {
+                        var raw_text = new_text[last_pos..match.Index];
+                        text_block.Inlines.Add(new Run(raw_text));
+                    }
+
+                    try
+                    {
+                        // Create a hyperlink for the match
+                        var link = new Hyperlink(new Run(match.Value))
+                        {
+                            NavigateUri = new Uri(match.Value)
+                        };
+                        link.Click += OnUrlClick;
+                        text_block.Inlines.Add(link);
+                    }
+                    catch (Exception)
+                    {
+                        text_block.Inlines.Add(match.Value);
+                    }
+
+                    // Update the last matched position
+                    last_pos = match.Index + match.Length;
                 }
 
-                // Create a hyperlink for the match
-                var link = new Hyperlink(new Run(match.Value))
-                {
-                    NavigateUri = new Uri(match.Value)
-                };
-                link.Click += OnUrlClick;
-
-                text_block.Inlines.Add(link);
-
-                // Update the last matched position
-                last_pos = match.Index + match.Length;
+                // Finally, copy the remainder of the string
+                if (last_pos < new_text.Length)
+                    text_block.Inlines.Add(new Run(new_text[last_pos..]));
             }
-
-            // Finally, copy the remainder of the string
-            if (last_pos < new_text.Length)
-                text_block.Inlines.Add(new Run(new_text[last_pos..]));
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
         private static void OnUrlClick(object sender, RoutedEventArgs e)
