@@ -2,12 +2,10 @@
 using SyncRooms.Properties;
 using SyncRooms.ViewModel;
 using System.Diagnostics;
-using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 using System.Windows;
 using static SyncRooms.FavoriteMembers;
-using static SyncRooms.ViewModel.MainWindowViewModel;
 
 namespace SyncRooms
 {
@@ -60,6 +58,11 @@ namespace SyncRooms
             Top = Settings.Default.WindowLocation.Y;
             Width = Settings.Default.WindowSize.Width;
             Height = Settings.Default.WindowSize.Height;
+
+            var fullname = typeof(App).Assembly.Location;
+            var info = System.Diagnostics.FileVersionInfo.GetVersionInfo(fullname);
+            var ver = info.FileVersion;
+            Title = $"SyncRooms:Rooms List V2 ver {ver}";
         }
 
         private void AutoReloadTimer_Tick(object? sender, EventArgs e)
@@ -128,7 +131,7 @@ namespace SyncRooms
                                         }
                                     }
                                 }
-                                
+
                                 //ここで退室チェックできるんじゃね？
                                 //対象は、AlertOnのJsonから。json.Roomsぶん回してヒットしなければ、退室済み
                                 //Alertedの中から削除する。

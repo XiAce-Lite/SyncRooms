@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
+using System.Windows;
 using System.Windows.Automation;
 using static SyncRooms.FavoriteMembers;
-using static SyncRooms.ViewModel.MainWindowViewModel;
 
 namespace SyncRooms
 {
@@ -68,91 +68,101 @@ namespace SyncRooms
         {
             if (string.IsNullOrEmpty(RoomId)) { return; }
 
-            TargetProcess targetProc = new("SYNCROOM2");
-            if (targetProc.IsAlive == false)
+            try
             {
-                return;
-            }
 
-            //タイトル検索なので、他のプロセスでも"SYNCROOM"が入ってると…
-            Process[] procs = Tools.GetProcessesByWindowTitle("SYNCROOM");
-            if (procs.Length == 0)
-            {
-                return;
-            }
-
-            AutomationElement? rootElement = null;
-            foreach (Process proc in procs)
-            {
-                if (proc.MainWindowTitle == "SYNCROOM")
+                TargetProcess targetProc = new("SYNCROOM2");
+                if (targetProc.IsAlive == false)
                 {
-                    //MainWindotTitle が "SYNCROOM"なプロセス＝ターゲットのプロセスは、SYNCROOM2.exeが中で作った別プロセスのようで
-                    //こんな面倒なやり方をしてみている。
-                    rootElement = AutomationElement.FromHandle(proc.MainWindowHandle);
-                    break;
+                    return;
+                }
+
+                //タイトル検索なので、他のプロセスでも"SYNCROOM"が入ってると…
+                Process[] procs = Tools.GetProcessesByWindowTitle("SYNCROOM");
+                if (procs.Length == 0)
+                {
+                    return;
+                }
+
+                AutomationElement? rootElement = null;
+                foreach (Process proc in procs)
+                {
+                    if (proc.MainWindowTitle == "SYNCROOM")
+                    {
+                        //MainWindotTitle が "SYNCROOM"なプロセス＝ターゲットのプロセスは、SYNCROOM2.exeが中で作った別プロセスのようで
+                        //こんな面倒なやり方をしてみている。
+                        rootElement = AutomationElement.FromHandle(proc.MainWindowHandle);
+                        break;
+                    }
+                }
+
+                if (rootElement is null)
+                {
+                    return;
+                }
+
+                AutomationElement? webArea = rootElement.FindFirst(TreeScope.Children | TreeScope.Descendants,
+                                                                    new PropertyCondition(AutomationElement.AutomationIdProperty, "RootWebArea"));
+                if (webArea is null)
+                {
+                    return;
+                }
+
+                AutomationElement? list = webArea.FindFirst(TreeScope.Element | TreeScope.Descendants,
+                                                        new PropertyCondition(AutomationElement.AutomationIdProperty, "list"));
+
+                TreeWalker twCardClass = new(new PropertyCondition(AutomationElement.ClassNameProperty,
+                                            "v-card v-theme--base v-card--density-default elevation-0 v-card--variant-elevated room-card"));
+
+                TreeWalker twEdit = new(new PropertyCondition(AutomationElement.LocalizedControlTypeProperty, "編集", PropertyConditionFlags.IgnoreCase));
+
+                AutomationElement vClassCard = twCardClass.GetFirstChild(list);
+                if (vClassCard is null) { return; }
+
+                AutomationElement editElement = twEdit.GetFirstChild(vClassCard);
+                AutomationElement txtBoxId = twEdit.GetFirstChild(editElement);
+
+                if (txtBoxId is null) { return; }
+
+                TreeWalker twClear = new(new PropertyCondition(AutomationElement.NameProperty, "Clear xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", PropertyConditionFlags.IgnoreCase));
+                AutomationElement ClearButton = twClear.GetFirstChild(vClassCard);
+                if (ClearButton is not null)
+                {
+                    if (ClearButton.GetCurrentPattern(InvokePattern.Pattern) is InvokePattern clearBtn)
+                    {
+                        clearBtn.Invoke();
+                    }
+                }
+
+                if (txtBoxId.TryGetCurrentPattern(ValuePattern.Pattern, out object valuePattern))
+                {
+                    ((ValuePattern)valuePattern).SetValue(RoomId);
+                }
+
+                TreeWalker twButton = new(new PropertyCondition(AutomationElement.NameProperty, "ENTER", PropertyConditionFlags.IgnoreCase));
+                AutomationElement EditButton = twButton.GetFirstChild(vClassCard);
+                if (EditButton is null) { return; }
+
+                await Task.Delay(500);
+                if (EditButton.GetCurrentPattern(InvokePattern.Pattern) is InvokePattern btn)
+                {
+                    btn.Invoke();
+                }
+
+                ClearButton = twClear.GetFirstChild(vClassCard);
+                if (ClearButton is not null)
+                {
+                    if (ClearButton.GetCurrentPattern(InvokePattern.Pattern) is InvokePattern clearBtn)
+                    {
+                        clearBtn.Invoke();
+                    }
                 }
             }
-
-            if (rootElement is null)
+            catch (Exception e)
             {
-                return;
-            }
-
-            AutomationElement? webArea = rootElement.FindFirst(TreeScope.Children | TreeScope.Descendants,
-                                                                new PropertyCondition(AutomationElement.AutomationIdProperty, "RootWebArea"));
-            if (webArea is null)
-            {
-                return;
-            }
-
-            AutomationElement? list = webArea.FindFirst(TreeScope.Element | TreeScope.Descendants,
-                                                    new PropertyCondition(AutomationElement.AutomationIdProperty, "list"));
-
-            TreeWalker twCardClass = new(new PropertyCondition(AutomationElement.ClassNameProperty,
-                                        "v-card v-theme--base v-card--density-default elevation-0 v-card--variant-elevated room-card"));
-
-            TreeWalker twEdit = new(new PropertyCondition(AutomationElement.LocalizedControlTypeProperty, "編集", PropertyConditionFlags.IgnoreCase));
-
-            AutomationElement vClassCard = twCardClass.GetFirstChild(list);
-            if (vClassCard is null) { return; }
-
-            AutomationElement editElement = twEdit.GetFirstChild(vClassCard);
-            AutomationElement txtBoxId = twEdit.GetFirstChild(editElement);
-
-            if (txtBoxId is null) { return; }
-
-            TreeWalker twClear = new(new PropertyCondition(AutomationElement.NameProperty, "Clear xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", PropertyConditionFlags.IgnoreCase));
-            AutomationElement ClearButton = twClear.GetFirstChild(vClassCard);
-            if (ClearButton is not null)
-            {
-                if (ClearButton.GetCurrentPattern(InvokePattern.Pattern) is InvokePattern clearBtn)
-                {
-                    clearBtn.Invoke();
-                }
-            }
-
-            if (txtBoxId.TryGetCurrentPattern(ValuePattern.Pattern, out object valuePattern))
-            {
-                ((ValuePattern)valuePattern).SetValue(RoomId);
-            }
-
-            TreeWalker twButton = new(new PropertyCondition(AutomationElement.NameProperty, "ENTER", PropertyConditionFlags.IgnoreCase));
-            AutomationElement EditButton = twButton.GetFirstChild(vClassCard);
-            if (EditButton is null) { return; }
-
-            await Task.Delay(500);
-            if (EditButton.GetCurrentPattern(InvokePattern.Pattern) is InvokePattern btn)
-            {
-                btn.Invoke();
-            }
-
-            ClearButton = twClear.GetFirstChild(vClassCard);
-            if (ClearButton is not null)
-            {
-                if (ClearButton.GetCurrentPattern(InvokePattern.Pattern) is InvokePattern clearBtn)
-                {
-                    clearBtn.Invoke();
-                }
+                //別に何もせんでもええやろとは思いつつ。
+                //そもそもオマケの機能ではあるので。
+                MessageBox.Show(e.Message);
             }
         }
     }
