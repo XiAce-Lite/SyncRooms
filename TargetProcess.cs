@@ -32,13 +32,13 @@ namespace SyncRooms
                 Id = targetProcess.Id;
                 MainWindowHandle = targetProcess.MainWindowHandle;
                 Proc = targetProcess;
-                Handle = targetProcess.Handle;
+                //Handle = targetProcess.Handle;
             }
             catch (Exception ex)
             {
                 string errMsg = $"エラーが発生しています。{ex.Message}";
                 MessageBox.Show(errMsg);
-                Application.Current.Shutdown();
+                //Application.Current.Shutdown();
             }
         }
     }
