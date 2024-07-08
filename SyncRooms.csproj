@@ -8,7 +8,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <OutputType>WinExe</OutputType>
     <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
-    <FileVersion>0.0.1.2</FileVersion>
+    <FileVersion>0.0.1.3</FileVersion>
     <ApplicationIcon>SyncRooms.ico</ApplicationIcon>
   </PropertyGroup>
 
