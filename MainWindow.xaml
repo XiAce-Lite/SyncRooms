@@ -85,6 +85,7 @@
             <!--
             <DataGrid
                 x:Name="DetailView"
+                AutoGenerateColumns="False"
                 ItemsSource="{Binding Rooms}"
                 ScrollViewer.CanContentScroll="true"
                 SelectionMode="Single"
@@ -119,39 +120,91 @@
                     </DataGridTemplateColumn>
 
 
-                    <DataGridTextColumn
-                        Width="200"
-                        Binding="{Binding Description}"
-                        Header="ルーム説明" />
+                    <DataGridTextColumn Binding="{Binding Description}" Header="ルーム説明" />
 
-                    <DataGridTextColumn
-                        Width="Auto"
-                        Binding="{Binding Members[0].Nickname}"
-                        Header="メンバー1" />
-                    <DataGridTextColumn
-                        Width="Auto"
-                        Binding="{Binding Members[1].Nickname}"
-                        Header="メンバー2" />
-                    <DataGridTextColumn
-                        Width="Auto"
-                        Binding="{Binding Members[2].Nickname}"
-                        Header="メンバー3" />
-                    <DataGridTextColumn
-                        Width="Auto"
-                        Binding="{Binding Members[3].Nickname}"
-                        Header="メンバー4" />
-                    <DataGridTextColumn
-                        Width="Auto"
-                        Binding="{Binding Members[4].Nickname}"
-                        Header="メンバー5" />
-                    <DataGridTextColumn
-                        Width="Auto"
-                        Binding="{Binding Members[5].Nickname}"
-                        Header="メンバー6" />
+                    <DataGridTemplateColumn CanUserSort="True" Header="メンバー">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <WrapPanel DataContext="{Binding Tags}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+
+                    <DataGridTemplateColumn CanUserSort="True" Header="メンバー">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <VirtualizingStackPanel
+                                    Orientation="Vertical"
+                                    ScrollViewer.IsDeferredScrollingEnabled="true"
+                                    VirtualizingPanel.IsVirtualizing="True"
+                                    VirtualizingPanel.VirtualizationMode="Recycling">
+
+                                    <TextBlock
+                                        FontWeight="Bold"
+                                        Text="{Binding Members[0].Nickname, UpdateSourceTrigger=PropertyChanged}"
+                                        TextWrapping="Wrap" />
+
+                                    <TextBlock
+                                        FontWeight="Bold"
+                                        Text="{Binding Members[3].Nickname, UpdateSourceTrigger=PropertyChanged}"
+                                        TextWrapping="Wrap" />
+
+                                </VirtualizingStackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn CanUserSort="True" Header="メンバー">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <VirtualizingStackPanel
+                                    Orientation="Vertical"
+                                    ScrollViewer.IsDeferredScrollingEnabled="true"
+                                    VirtualizingPanel.IsVirtualizing="True"
+                                    VirtualizingPanel.VirtualizationMode="Recycling">
+
+                                    <TextBlock
+                                        FontWeight="Bold"
+                                        Text="{Binding Members[1].Nickname, UpdateSourceTrigger=PropertyChanged}"
+                                        TextWrapping="Wrap" />
+
+                                    <TextBlock
+                                        FontWeight="Bold"
+                                        Text="{Binding Members[4].Nickname, UpdateSourceTrigger=PropertyChanged}"
+                                        TextWrapping="Wrap" />
+
+                                </VirtualizingStackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn CanUserSort="True" Header="メンバー">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <VirtualizingStackPanel
+                                    Orientation="Vertical"
+                                    ScrollViewer.IsDeferredScrollingEnabled="true"
+                                    VirtualizingPanel.IsVirtualizing="True"
+                                    VirtualizingPanel.VirtualizationMode="Recycling">
+
+                                    <TextBlock
+                                        FontWeight="Bold"
+                                        Text="{Binding Members[2].Nickname, UpdateSourceTrigger=PropertyChanged}"
+                                        TextWrapping="Wrap" />
+
+                                    <TextBlock
+                                        FontWeight="Bold"
+                                        Text="{Binding Members[5].Nickname, UpdateSourceTrigger=PropertyChanged}"
+                                        TextWrapping="Wrap" />
+
+                                </VirtualizingStackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
             -->
-
         </Grid>
 
         <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding IsChecked, ElementName=MenuToggleButton}">
@@ -349,8 +402,8 @@
                             GroupName="ViewOption"
                             IsChecked="False"
                             Style="{StaticResource MaterialDesignUserForegroundRadioButton}" />
-
                         -->
+
                         <!--
                             テスト用ボタン。色々使う。
                         -->
