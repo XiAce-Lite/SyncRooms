@@ -249,5 +249,10 @@ namespace SyncRooms
                 AutoReloadTimer.Start();
             }
         }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            MenuToggleButton.IsChecked = false;
+        }
     }
 }

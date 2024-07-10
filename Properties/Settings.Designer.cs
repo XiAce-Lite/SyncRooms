@@ -130,5 +130,17 @@ namespace SyncRooms.Properties {
                 this["IsVisibleUnlocked"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool PanelView {
+            get {
+                return ((bool)(this["PanelView"]));
+            }
+            set {
+                this["PanelView"] = value;
+            }
+        }
     }
 }

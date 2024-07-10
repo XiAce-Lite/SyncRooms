@@ -1,0 +1,49 @@
+﻿<UserControl
+    x:Class="SyncRooms.Controls.MembersSmall"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:SyncRooms.Controls"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:SyncRooms.ViewModel"
+    d:DesignHeight="40"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
+    <Grid>
+        <materialDesign:Card Margin="4,0,0,4">
+
+            <VirtualizingStackPanel
+                x:Name="MemberArea"
+                Background="AliceBlue"
+                Orientation="Horizontal"
+                VirtualizingPanel.IsVirtualizing="True"
+                VirtualizingPanel.ScrollUnit="Pixel"
+                VirtualizingPanel.VirtualizationMode="Recycling">
+                <Image
+                    Width="22"
+                    Height="22"
+                    Margin="5,0,0,0"
+                    VerticalAlignment="Top"
+                    Source="{Binding Avatar.Url}" />
+
+                <VirtualizingStackPanel Orientation="Vertical" MaxWidth="115">
+                    <TextBlock
+                        Margin="12,2,12,0"
+                        VerticalAlignment="Center"
+                        d:Text="Nickname"
+                        FontSize="10"
+                        FontWeight="Bold"
+                        Text="{Binding Nickname}" />
+                    <TextBlock
+                        Margin="20,0,12,4"
+                        VerticalAlignment="Center"
+                        d:Text="LastPlayPart"
+                        FontSize="9"
+                        Text="{Binding LastPlayedPart.Part}" />
+                </VirtualizingStackPanel>
+            </VirtualizingStackPanel>
+
+        </materialDesign:Card>
+    </Grid>
+</UserControl>
