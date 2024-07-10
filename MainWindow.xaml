@@ -26,6 +26,15 @@
         <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlColorKey}}" />
     </Window.Background>
 
+    <Window.Resources>
+        <Style x:Key="CheckHeader" TargetType="CheckBox">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="center" />
+        </Style>
+    </Window.Resources>
+
     <Grid>
         <Grid Margin="10,37,0,0">
             <ListView
@@ -82,14 +91,18 @@
 
             </ListView>
 
-            <!--
             <DataGrid
                 x:Name="DetailView"
                 AutoGenerateColumns="False"
+                CanUserAddRows="False"
+                CanUserDeleteRows="False"
+                CanUserResizeRows="False"
                 ItemsSource="{Binding Rooms}"
+                RowHeaderWidth="0"
                 ScrollViewer.CanContentScroll="true"
                 SelectionMode="Single"
                 VirtualizingPanel.IsVirtualizing="True"
+                VirtualizingPanel.ScrollUnit="Pixel"
                 VirtualizingPanel.VirtualizationMode="Recycling"
                 Visibility="{Binding ElementName=DetailOption, Path=IsChecked, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <DataGrid.Columns>
@@ -120,7 +133,10 @@
                     </DataGridTemplateColumn>
 
 
-                    <DataGridTextColumn Binding="{Binding Description}" Header="ルーム説明" />
+                    <DataGridTextColumn
+                        Width="200"
+                        Binding="{Binding Description}"
+                        Header="ルーム説明" />
 
                     <DataGridTemplateColumn CanUserSort="True" Header="メンバー">
                         <DataGridTemplateColumn.CellTemplate>
@@ -204,7 +220,6 @@
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
-            -->
         </Grid>
 
         <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding IsChecked, ElementName=MenuToggleButton}">
@@ -234,6 +249,28 @@
                                 Foreground="#FF3F51B5"
                                 IsChecked="{Binding WindowTopMost, Mode=TwoWay, Source={x:Static prop:Settings.Default}, UpdateSourceTrigger=PropertyChanged}" />
                         </VirtualizingStackPanel>
+
+                        <RadioButton
+                            x:Name="PanelOption"
+                            Margin="15,0,0,0"
+                            Padding="10,4,4,4"
+                            Content="パネル表示"
+                            FontWeight="DemiBold"
+                            Foreground="#FF3F51B5"
+                            GroupName="ViewOption"
+                            IsChecked="True"
+                            Style="{StaticResource MaterialDesignUserForegroundRadioButton}" />
+                        <RadioButton
+                            x:Name="DetailOption"
+                            Margin="15,0,0,0"
+                            Padding="10,4,4,4"
+                            Content="詳細表示"
+                            FontWeight="DemiBold"
+                            Foreground="#FF3F51B5"
+                            GroupName="ViewOption"
+                            IsChecked="False"
+                            Style="{StaticResource MaterialDesignUserForegroundRadioButton}" />
+
 
                         <!--
                         <Button
@@ -294,22 +331,26 @@
                             Content="Reload"
                             DockPanel.Dock="Top"
                             FontSize="10"
-                            IsEnabled="{Binding ElementName=UseAutoReload, Path=IsChecked, Converter={StaticResource InvertBooleanConverter}}" />
+                            IsEnabled="{Binding ElementName=UseAutoReload, Path=IsChecked, Converter={StaticResource InvertBooleanConverter}}"
+                            ToolTip="手動リロード" />
 
                         <Label
                             Margin="16,0,0,0"
                             VerticalAlignment="Center"
-                            Content="Room Counts: "
+                            Content="Rooms :"
                             DockPanel.Dock="Top"
                             FontSize="10"
                             Foreground="White" />
 
                         <Label
+                            Width="20"
                             VerticalAlignment="Center"
+                            HorizontalContentAlignment="Right"
                             Content="{Binding Rooms.Count, FallbackValue='0'}"
                             DockPanel.Dock="Top"
                             FontSize="10"
-                            Foreground="White" />
+                            Foreground="White"
+                            ToolTip="選択された部屋数を表示" />
 
                         <CheckBox
                             x:Name="UseAutoReload"
@@ -323,7 +364,8 @@
                             FlowDirection="RightToLeft"
                             FontSize="10"
                             IsChecked="{Binding UseAutoReload, Mode=TwoWay, Source={x:Static prop:Settings.Default}, UpdateSourceTrigger=PropertyChanged}"
-                            Style="{DynamicResource MaterialDesignUserForegroundCheckBox}">
+                            Style="{DynamicResource MaterialDesignUserForegroundCheckBox}"
+                            ToolTip="自動リロードを有効にする。">
                             <CheckBox.BorderBrush>
                                 <SolidColorBrush Opacity="1" Color="#FF3F51B5" />
                             </CheckBox.BorderBrush>
@@ -339,7 +381,7 @@
 
                         <Slider
                             x:Name="ReloadTiming"
-                            Width="110"
+                            Width="100"
                             Margin="5,1,0,0"
                             AutoToolTipPlacement="TopLeft"
                             Foreground="AliceBlue"
@@ -347,62 +389,46 @@
                             Maximum="120"
                             Minimum="15"
                             SmallChange="1"
+                            ToolTip="自動リロードの間隔を調整。秒単位。"
                             ValueChanged="ReloadTiming_ValueChanged"
                             Value="{Binding ReloadTiming, Mode=TwoWay, Source={x:Static prop:Settings.Default}, UpdateSourceTrigger=PropertyChanged}" />
 
                         <CheckBox
                             x:Name="CheckJP_Room"
-                            Margin="15,0,0,0"
-                            HorizontalContentAlignment="Stretch"
-                            VerticalContentAlignment="Center"
+                            Margin="13,0,0,0"
+                            Padding="4,2,0,0"
                             Click="Option_Click"
                             Content="JP"
                             IsChecked="{Binding IsVisibleJp, Mode=TwoWay, Source={x:Static prop:Settings.Default}, UpdateSourceTrigger=PropertyChanged}"
-                            Style="{StaticResource MaterialDesignUserForegroundCheckBox}" />
+                            Style="{StaticResource CheckHeader}"
+                            ToolTip="日本語設定の部屋を選択" />
                         <CheckBox
                             x:Name="CheckKR_Room"
                             Margin="13,0,0,0"
-                            HorizontalContentAlignment="Stretch"
-                            VerticalContentAlignment="Center"
+                            Padding="4,2,0,0"
                             Click="Option_Click"
                             Content="KR"
                             IsChecked="{Binding IsVisibleKr, Mode=TwoWay, Source={x:Static prop:Settings.Default}, UpdateSourceTrigger=PropertyChanged}"
-                            Style="{StaticResource MaterialDesignUserForegroundCheckBox}" />
+                            Style="{StaticResource CheckHeader}"
+                            ToolTip="韓国語設定の部屋を選択" />
                         <CheckBox
                             x:Name="CheckLocked"
-                            Margin="15,0,0,0"
-                            HorizontalContentAlignment="Stretch"
-                            VerticalContentAlignment="Center"
+                            Margin="13,0,0,0"
+                            Padding="4,2,0,0"
                             Click="Option_Click"
-                            Content="Locked"
+                            Content="Lock"
                             IsChecked="{Binding IsVisibleLocked, Mode=TwoWay, Source={x:Static prop:Settings.Default}, UpdateSourceTrigger=PropertyChanged}"
-                            Style="{StaticResource MaterialDesignUserForegroundCheckBox}" />
+                            Style="{StaticResource CheckHeader}"
+                            ToolTip="鍵つきの部屋を選択" />
                         <CheckBox
                             x:Name="CheckUnlocked"
                             Margin="13,0,0,0"
-                            HorizontalContentAlignment="Stretch"
-                            VerticalContentAlignment="Center"
+                            Padding="4,2,0,0"
                             Click="Option_Click"
                             Content="Unlock"
                             IsChecked="{Binding IsVisibleUnlocked, Mode=TwoWay, Source={x:Static prop:Settings.Default}, UpdateSourceTrigger=PropertyChanged}"
-                            Style="{StaticResource MaterialDesignUserForegroundCheckBox}" />
-
-                        <!--
-                        <RadioButton
-                            x:Name="PanelOption"
-                            Margin="14,0,0,0"
-                            Content="Panel"
-                            GroupName="ViewOption"
-                            IsChecked="True"
-                            Style="{StaticResource MaterialDesignUserForegroundRadioButton}" />
-                        <RadioButton
-                            x:Name="DetailOption"
-                            Margin="4,0,0,0"
-                            Content="Detail"
-                            GroupName="ViewOption"
-                            IsChecked="False"
-                            Style="{StaticResource MaterialDesignUserForegroundRadioButton}" />
-                        -->
+                            Style="{StaticResource CheckHeader}"
+                            ToolTip="鍵なしの部屋を選択" />
 
                         <!--
                             テスト用ボタン。色々使う。
