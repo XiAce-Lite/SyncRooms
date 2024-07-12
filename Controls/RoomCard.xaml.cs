@@ -15,7 +15,7 @@ namespace SyncRooms.Controls
 
         private void RoomIdCopy_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(RoomId.Text))
+            if (!string.IsNullOrEmpty(RoomId.Text))
             {
                 Clipboard.SetDataObject(RoomId.Text);
             }
@@ -23,7 +23,7 @@ namespace SyncRooms.Controls
 
         private void EnterRoom_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(RoomId.Text))
+            if (!string.IsNullOrEmpty(RoomId.Text))
             {
                 Tools.EnterRoom(RoomId.Text);
             }
