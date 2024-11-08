@@ -95,6 +95,8 @@ namespace SyncRooms.ViewModel
             [JsonPropertyName("members")]
             public ObservableCollection<Member>? Members { get; set; } = [];
 
+            [JsonPropertyName("maxMemberCount")]
+            public int MaxMemberCount { get; set; } = 0;
 
             public bool IsExistAlertOn
             {

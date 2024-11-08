@@ -21,7 +21,10 @@
         Width="293"
         Height="370"
         Margin="3,0,2,0">
-        <materialDesign:Card Margin="0,0,0,4" UniformCornerRadius="10">
+        <materialDesign:Card
+            Margin="0,0,0,4"
+            Background="AliceBlue"
+            UniformCornerRadius="10">
             <VirtualizingStackPanel
                 Background="{Binding NeedPasswd, Converter={StaticResource LockRoomConverter}}"
                 Orientation="Vertical"
@@ -36,26 +39,58 @@
                     VirtualizingPanel.IsVirtualizing="True"
                     VirtualizingPanel.ScrollUnit="Pixel"
                     VirtualizingPanel.VirtualizationMode="Recycling">
-                    <materialDesign:PackIcon
-                        x:Name="IsLocked"
-                        Margin="5,7,0,0"
-                        Background="White"
-                        Kind="LockOutline"
-                        Visibility="{Binding NeedPasswd, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                     <TextBlock
                         x:Name="RoomTitle"
-                        Width="280"
+                        Width="255"
                         Height="Auto"
-                        Padding="14,10,0,0"
+                        Margin="0,0,4,0"
+                        Padding="10,10,0,0"
                         d:Text="Room Name"
-                        FontSize="16"
+                        FontSize="14"
                         FontWeight="Bold"
                         Foreground="#4a4a4a"
                         Style="{StaticResource MaterialDesignCaptionTextBlock}"
                         Text="{Binding Name}"
                         TextWrapping="NoWrap"
                         ToolTip="{Binding Name}" />
+                    <VirtualizingStackPanel
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal"
+                        VirtualizingPanel.IsVirtualizing="True"
+                        VirtualizingPanel.ScrollUnit="Pixel"
+                        VirtualizingPanel.VirtualizationMode="Recycling">
+                        <TextBlock
+                            x:Name="MemberCount"
+                            Width="Auto"
+                            Height="16"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Bottom"
+                            d:Text="8"
+                            Text="{Binding Members.Count}"
+                            TextAlignment="Right"
+                            TextWrapping="Wrap" />
+                        <TextBlock
+                            Width="Auto"
+                            Height="16"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Bottom"
+                            Text="/"
+                            TextAlignment="Right"
+                            TextWrapping="Wrap" />
+                        <TextBlock
+                            x:Name="MaxMemberCount"
+                            Width="7"
+                            Height="16"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Bottom"
+                            d:Text="8"
+                            Text="{Binding MaxMemberCount}"
+                            TextAlignment="Right"
+                            TextWrapping="Wrap" />
+
+                    </VirtualizingStackPanel>
+
 
                 </VirtualizingStackPanel>
 
@@ -65,9 +100,25 @@
                     VirtualizingPanel.IsVirtualizing="True"
                     VirtualizingPanel.ScrollUnit="Pixel"
                     VirtualizingPanel.VirtualizationMode="Recycling">
+                    <Border
+                        Width="16"
+                        Height="16"
+                        Margin="8,0,0,0">
+                        <materialDesign:PackIcon
+                            x:Name="IsLocked"
+                            Width="16"
+                            Height="16"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Background="White"
+                            Kind="LockOutline"
+                            Visibility="{Binding NeedPasswd, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                    </Border>
+
                     <TextBlock
                         x:Name="RoomId"
-                        Margin="40,0,0,0"
+                        Margin="4,0,0,0"
                         Padding="0,10,0,0"
                         HorizontalAlignment="Right"
                         d:Text="RoomId"
@@ -135,12 +186,16 @@
                 </ItemsControl>
                 -->
 
-                <materialDesign:Card Margin="6,0,6,4" UniformCornerRadius="4" Width="279">
+                <materialDesign:Card
+                    Width="280"
+                    Margin="6,0,6,4"
+                    UniformCornerRadius="4">
                     <ScrollViewer
-                        Height="70"
+                        Height="64"
+                        Margin="0,-1,0,0"
                         CanContentScroll="True"
                         Style="{StaticResource MaterialDesignScrollViewer}"
-                        VerticalScrollBarVisibility="Auto">
+                        VerticalScrollBarVisibility="Visible">
                         <TextBlock
                             x:Name="RoomDescription"
                             Padding="5,5,5,5"
@@ -153,54 +208,72 @@
                     </ScrollViewer>
                 </materialDesign:Card>
 
+                <materialDesign:Card
+                    Width="280"
+                    Margin="6,0,6,4"
+                    Background="{x:Null}"
+                    UniformCornerRadius="4">
 
-                <ListView Height="250" ItemsSource="{Binding Members}">
-                    <ListView.Template>
-                        <ControlTemplate>
-                            <ItemsPresenter />
-                        </ControlTemplate>
-                    </ListView.Template>
+                    <ScrollViewer
+                        Width="280"
+                        Height="232"
+                        Margin="0,-1,0,0"
+                        CanContentScroll="True"
+                        Style="{StaticResource MaterialDesignScrollViewer}"
+                        VerticalScrollBarVisibility="Visible">
+                        <ListView
+                            Width="263"
+                            d:ItemsSource="{d:SampleData ItemCount=6}"
+                            ItemsSource="{Binding Members}"
+                            ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                            <ListView.Template>
+                                <ControlTemplate>
+                                    <ItemsPresenter />
+                                </ControlTemplate>
+                            </ListView.Template>
 
-                    <ListView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <vwp:VirtualizingWrapPanel
-                                Orientation="Horizontal"
-                                SpacingMode="BetweenItemsOnly"
-                                StretchItems="True"
-                                VirtualizingPanel.IsVirtualizing="True" />
-                        </ItemsPanelTemplate>
-                    </ListView.ItemsPanel>
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <vwp:VirtualizingWrapPanel
+                                        Orientation="Horizontal"
+                                        SpacingMode="BetweenItemsOnly"
+                                        StretchItems="True"
+                                        VirtualizingPanel.IsVirtualizing="True" />
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
 
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="HorizontalAlignment" Value="Left" />
-                            <Setter Property="HorizontalContentAlignment" Value="Left" />
-                            <Setter Property="VerticalContentAlignment" Value="Stretch" />
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="{x:Type ContentControl}">
-                                        <Border Background="{TemplateBinding Background}">
-                                            <ContentPresenter />
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </ListView.ItemContainerStyle>
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListViewItem}">
+                                    <Setter Property="HorizontalAlignment" Value="Left" />
+                                    <Setter Property="HorizontalContentAlignment" Value="Left" />
+                                    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ContentControl}">
+                                                <Border Background="{TemplateBinding Background}">
+                                                    <ContentPresenter />
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListView.ItemContainerStyle>
 
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <VirtualizingStackPanel
-                                Orientation="Horizontal"
-                                VirtualizingPanel.IsVirtualizing="True"
-                                VirtualizingPanel.VirtualizationMode="Recycling">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <VirtualizingStackPanel
+                                        Orientation="Horizontal"
+                                        VirtualizingPanel.IsVirtualizing="True"
+                                        VirtualizingPanel.VirtualizationMode="Recycling">
 
-                                <controls:Members />
+                                        <controls:Members />
 
-                            </VirtualizingStackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                                    </VirtualizingStackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </ScrollViewer>
+                </materialDesign:Card>
 
             </VirtualizingStackPanel>
 

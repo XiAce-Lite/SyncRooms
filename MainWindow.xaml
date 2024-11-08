@@ -150,7 +150,6 @@
 
                     <DataGridTemplateColumn
                         Width="Auto"
-                        MaxWidth="310"
                         CanUserSort="True"
                         Header="メンバー">
                         <DataGridTemplateColumn.CellTemplate>
@@ -359,7 +358,7 @@
                             ToolTip="手動リロード" />
 
                         <Label
-                            Margin="16,0,0,0"
+                            Margin="12,0,0,0"
                             VerticalAlignment="Center"
                             Content="Rooms :"
                             DockPanel.Dock="Top"
@@ -367,7 +366,7 @@
                             Foreground="White" />
 
                         <Label
-                            Width="20"
+                            Width="24"
                             VerticalAlignment="Center"
                             HorizontalContentAlignment="Right"
                             Content="{Binding Rooms.Count, FallbackValue='0'}"
