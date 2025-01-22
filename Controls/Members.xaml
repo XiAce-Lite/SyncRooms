@@ -7,13 +7,15 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:SyncRooms.ViewModel"
+    Width="260"
     d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
-    mc:Ignorable="d" Width="260">
+    mc:Ignorable="d">
 
     <Grid>
         <materialDesign:Card
             Height="Auto"
-            Margin="0,2,0,0" Background="AliceBlue">
+            Margin="0,2,0,0"
+            Background="AliceBlue">
             <VirtualizingStackPanel
                 x:Name="MemberArea"
                 HorizontalAlignment="Center"
@@ -34,10 +36,11 @@
                     VirtualizingPanel.ScrollUnit="Pixel"
                     VirtualizingPanel.VirtualizationMode="Recycling">
                     <VirtualizingStackPanel
+                        Width="230"
                         Orientation="Horizontal"
                         VirtualizingPanel.IsVirtualizing="True"
                         VirtualizingPanel.ScrollUnit="Pixel"
-                        VirtualizingPanel.VirtualizationMode="Recycling" Width="230">
+                        VirtualizingPanel.VirtualizationMode="Recycling">
 
                         <TextBlock
                             x:Name="NickName"

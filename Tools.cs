@@ -122,6 +122,10 @@ namespace SyncRooms
                 AutomationElement editElement = twEdit.GetFirstChild(vClassCard);
                 AutomationElement txtBoxId = twEdit.GetFirstChild(editElement);
 
+                if (txtBoxId is null) {
+                    txtBoxId = editElement;
+                }
+
                 if (txtBoxId is null) { return; }
 
                 TreeWalker twClear = new(new PropertyCondition(AutomationElement.NameProperty, "Clear xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", PropertyConditionFlags.IgnoreCase));
@@ -139,7 +143,7 @@ namespace SyncRooms
                     ((ValuePattern)valuePattern).SetValue(RoomId);
                 }
 
-                TreeWalker twButton = new(new PropertyCondition(AutomationElement.NameProperty, "ENTER", PropertyConditionFlags.IgnoreCase));
+                TreeWalker twButton = new(new PropertyCondition(AutomationElement.NameProperty, "入室する", PropertyConditionFlags.IgnoreCase));
                 AutomationElement EditButton = twButton.GetFirstChild(vClassCard);
                 if (EditButton is null) { return; }
 
