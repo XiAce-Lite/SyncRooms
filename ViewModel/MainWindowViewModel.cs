@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 using static SyncRooms.FavoriteMembers;
-using SyncRooms.Properties;
 
 namespace SyncRooms.ViewModel
 {
@@ -45,7 +44,8 @@ namespace SyncRooms.ViewModel
 
             private string _description = string.Empty;
             [JsonPropertyName("description")]
-            public string Description {
+            public string Description
+            {
                 get => _description;
                 set
                 {
@@ -115,7 +115,8 @@ namespace SyncRooms.ViewModel
                 }
             }
 
-            public bool IsExistFavorite {
+            public bool IsExistFavorite
+            {
                 get
                 {
 #nullable disable warnings

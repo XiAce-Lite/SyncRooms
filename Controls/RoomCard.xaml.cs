@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace SyncRooms.Controls
 {
@@ -23,10 +24,34 @@ namespace SyncRooms.Controls
 
         private void EnterRoom_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(RoomId.Text))
+            if (!string.IsNullOrEmpty(RoomId.Text) && !string.IsNullOrEmpty(RoomTitle.Text) && NeedPassword.IsChecked != null)
             {
-                Tools.EnterRoom(RoomId.Text);
+                Tools.EnterRoom(RoomTitle.Text,RoomId.Text, (bool)NeedPassword.IsChecked);
             }
+        }
+
+        private void RoomDescription_MouseEnter(object sender, MouseEventArgs e)
+        {
+            RoomDescriptionPopup.IsOpen = true;
+        }
+
+        private void RoomDescription_MouseLeave(object sender, MouseEventArgs e)
+        {
+            // マウスがPopup上にある場合は閉じない
+            if (!RoomDescriptionPopup.IsMouseOver)
+                RoomDescriptionPopup.IsOpen = false;
+        }
+
+        private void RoomDescriptionPopup_MouseEnter(object sender, MouseEventArgs e)
+        {
+            RoomDescriptionPopup.IsOpen = true;
+        }
+
+        private void RoomDescriptionPopup_MouseLeave(object sender, MouseEventArgs e)
+        {
+            // マウスがTextBlock上にある場合は閉じない
+            if (!RoomDescription.IsMouseOver)
+                RoomDescriptionPopup.IsOpen = false;
         }
     }
 }

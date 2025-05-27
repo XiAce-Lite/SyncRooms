@@ -1,12 +1,10 @@
-﻿using System.Drawing;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using static SyncRooms.FavoriteMembers;
 
 namespace SyncRooms.Controls

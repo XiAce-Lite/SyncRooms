@@ -113,8 +113,12 @@
                             Background="White"
                             Kind="LockOutline"
                             Visibility="{Binding NeedPasswd, Converter={StaticResource BooleanToVisibilityConverter}}" />
-
                     </Border>
+
+                    <CheckBox
+                        x:Name="NeedPassword"
+                        IsChecked="{Binding NeedPasswd}"
+                        Visibility="Hidden" />
 
                     <TextBlock
                         x:Name="RoomId"
@@ -190,22 +194,45 @@
                     Width="280"
                     Margin="6,0,6,4"
                     UniformCornerRadius="4">
-                    <ScrollViewer
-                        Height="64"
-                        Margin="0,-1,0,0"
-                        CanContentScroll="True"
-                        Style="{StaticResource MaterialDesignScrollViewer}"
-                        VerticalScrollBarVisibility="Visible">
-                        <TextBlock
-                            x:Name="RoomDescription"
-                            Padding="5,5,5,5"
-                            d:Text="Room Description"
-                            local:NavigationService.Text="{Binding Description}"
-                            Background="#f9fcff"
-                            FontSize="11"
-                            TextWrapping="Wrap"
-                            ToolTip="{Binding Description}" />
-                    </ScrollViewer>
+                    <StackPanel>
+                        <ScrollViewer
+                            Height="64"
+                            Margin="0,-1,0,0"
+                            CanContentScroll="True"
+                            Style="{StaticResource MaterialDesignScrollViewer}"
+                            VerticalScrollBarVisibility="Visible">
+
+                            <TextBlock
+                                x:Name="RoomDescription"
+                                Padding="5,5,5,5"
+                                d:Text="Room Description"
+                                local:NavigationService.Text="{Binding Description}"
+                                Background="#f9fcff"
+                                FontSize="11"
+                                MouseEnter="RoomDescription_MouseEnter"
+                                MouseLeave="RoomDescription_MouseLeave"
+                                TextWrapping="Wrap" />
+                        </ScrollViewer>
+                        <Popup
+                            x:Name="RoomDescriptionPopup"
+                            AllowsTransparency="True"
+                            Placement="MousePoint"
+                            PlacementTarget="{Binding ElementName=RoomDescription}"
+                            StaysOpen="True">
+                            <TextBox
+                                MinWidth="150"
+                                MaxWidth="300"
+                                Padding="5"
+                                AutoWordSelection="True"
+                                Background="White"
+                                BorderThickness="1"
+                                IsReadOnly="True"
+                                MouseEnter="RoomDescriptionPopup_MouseEnter"
+                                MouseLeave="RoomDescriptionPopup_MouseLeave"
+                                Text="{Binding Description}"
+                                TextWrapping="WrapWithOverflow" />
+                        </Popup>
+                    </StackPanel>
                 </materialDesign:Card>
 
                 <materialDesign:Card

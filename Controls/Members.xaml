@@ -87,6 +87,7 @@
                             Height="16"
                             Padding="0,0,0,0"
                             Click="RemoveAlert_Click"
+                            Cursor="Hand"
                             Foreground="Gold"
                             Style="{StaticResource MaterialDesignFlatButton}">
                             <DockPanel>
@@ -99,7 +100,7 @@
                             Height="16"
                             Padding="0,0,0,0"
                             Click="AddAlert_Click"
-                            Cursor=""
+                            Cursor="Hand"
                             Style="{StaticResource MaterialDesignFlatButton}">
                             <DockPanel>
                                 <materialDesign:PackIcon Kind="AddAlertOutline" Visibility="{Binding ElementName=CheckAlertOff, Path=IsChecked, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}" />
