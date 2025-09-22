@@ -8,7 +8,19 @@ namespace SyncRooms.ViewModel
 {
     internal class MainWindowViewModel : INotifyPropertyChanged
     {
-        public ObservableCollection<Room>? Rooms { get; set; }
+        private ObservableCollection<Room> _rooms = [];
+        public ObservableCollection<Room> Rooms
+        {
+            get => _rooms;
+            set
+            {
+                if (!ReferenceEquals(_rooms, value))
+                {
+                    _rooms = value;
+                    OnPropertyChanged(nameof(Rooms));
+                }
+            }
+        }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -93,44 +105,14 @@ namespace SyncRooms.ViewModel
             public OwnerUser? OwnerUser { get; set; }
 
             [JsonPropertyName("members")]
-            public ObservableCollection<Member>? Members { get; set; } = [];
+            public ObservableCollection<Member> Members { get; set; } = [];
 
             [JsonPropertyName("maxMemberCount")]
             public int MaxMemberCount { get; set; } = 0;
 
-            public bool IsExistAlertOn
-            {
-                get
-                {
-#nullable disable warnings
-                    foreach (var item in Members)
-                    {
-                        if (item.AlertOn)
-                        {
-                            return true;
-                        }
-                    }
-                    return false;
-#nullable restore warnings
-                }
-            }
+            public bool IsExistAlertOn => Members?.Any(item => item.AlertOn) == true;
 
-            public bool IsExistFavorite
-            {
-                get
-                {
-#nullable disable warnings
-                    foreach (var item in Members)
-                    {
-                        if (item.IsFavorite)
-                        {
-                            return true;
-                        }
-                    }
-                    return false;
-#nullable restore warnings
-                }
-            }
+            public bool IsExistFavorite => Members?.Any(item => item.IsFavorite) == true;
         }
 
         public class Member : OwnerUser
