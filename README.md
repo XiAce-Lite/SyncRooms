@@ -3,7 +3,7 @@
 [YAMAHA SyncRoom](https://syncroom.yamaha.com) の部屋一覧をWindowsアプリで作りまして。
 
 ## 使い方
-[ここ](https://github.com/XiAce-Lite/SyncRooms/releases/latest)から最新版の  SyncRoomChatToolV2_vX.X.X.X.zip ファイルを落してきて、適当なフォルダに解凍して、あとは実行するだけ。
+[ここ](https://github.com/XiAce-Lite/SyncRooms/releases/latest)から最新版の  SyncRooms_vX.X.X.X.zip ファイルを落してきて、適当なフォルダに解凍して、あとは実行するだけ。
 
 インストーラーも付けてみました。install.zipの中身を解凍して、Setup.exeを実行します。.msiを叩いてもいけるはず。
 
