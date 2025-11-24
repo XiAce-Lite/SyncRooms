@@ -8,6 +8,9 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Windows;
 using static SyncRooms.FavoriteMembers;
+using System.Security.Cryptography;
+using System.Text;
+using System.Net.Http.Headers;
 
 namespace SyncRooms
 {
@@ -110,7 +113,7 @@ namespace SyncRooms
 
             var currentUserIds = GetCurrentUserIds(roomsRoot.Rooms);
 
-            NotifyRoomAlerts(filteredRooms);
+            await NotifyRoomAlerts(filteredRooms);
             CheckRoomExits(jsonFile, currentUserIds);
         }
 
@@ -198,7 +201,7 @@ namespace SyncRooms
                 .Select(m => m.UserId)];
         }
 
-        private void NotifyRoomAlerts(List<MainWindowViewModel.Room> filteredRooms)
+        private async Task NotifyRoomAlerts(List<MainWindowViewModel.Room> filteredRooms)
         {
             foreach (var room in filteredRooms)
             {
@@ -211,6 +214,88 @@ namespace SyncRooms
                             .AddText($"{alertMember.Nickname}さん({alertMember.LastPlayedPart?.Part})が「{room.Name}」に入室しています。")
                             .Show();
                         AlertedMembers[alertMember.UserId] = alertMember;
+
+                        // After showing Toast, try to find apikey.dat in user profile and post to Pushbullet if exists.
+                        try
+                        {
+                            string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                            string apiFile = Path.Combine(userProfile, "apikey.dat");
+                            if (!File.Exists(apiFile))
+                            {
+                                continue;
+                            }
+
+                            string? token = null;
+
+                            try
+                            {
+                                var fileBytes = File.ReadAllBytes(apiFile);
+                                try
+                                {
+                                    // Try to decrypt using DPAPI for current user
+                                    var decrypted = ProtectedData.Unprotect(fileBytes, null, DataProtectionScope.CurrentUser);
+                                    token = Encoding.UTF8.GetString(decrypted);
+                                }
+                                catch
+                                {
+                                    // If decryption fails, try reading as plain text
+                                    try
+                                    {
+                                        token = File.ReadAllText(apiFile);
+                                    }
+                                    catch
+                                    {
+                                        token = null;
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                                // ignore and continue
+                                token = null;
+                            }
+
+                            token = token?.Trim();
+                            // remove possible surrounding quotes
+                            token = token?.Trim('"');
+                            if (string.IsNullOrEmpty(token))
+                            {
+                                continue;
+                            }
+
+                            // Prepare Pushbullet request
+                            var pushObj = new
+                            {
+                                type = "note",
+                                title = "Enter Room",
+                                body = $"{alertMember.Nickname} enters {room.Name}."
+                            };
+
+                            var json = JsonSerializer.Serialize(pushObj, _serializerOptions);
+                            var content = new StringContent(json, Encoding.UTF8, "application/json");
+                            // Ensure Content-Type header explicitly set
+                            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+                            try
+                            {
+                                // Use PostAsync and await the response to ensure the request is actually sent
+                                using var request = new HttpRequestMessage(HttpMethod.Post, "https://api.pushbullet.com/v2/pushes");
+                                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                                request.Content = content;
+
+                                var response = await _client!.SendAsync(request);
+                                // Dispose response after use
+                                response.Dispose();
+                            }
+                            catch
+                            {
+                                // Ignore any exceptions from API call and continue
+                            }
+                        }
+                        catch
+                        {
+                            // Ignore any exception in the whole pushbullet flow and continue
+                        }
                     }
                 }
             }
